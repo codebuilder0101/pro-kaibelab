@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { useTranslations } from '../../i18n/utils'
+import type { Lang } from '../../i18n/ui'
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }]
+}
+
+const { lang } = Astro.params as { lang: Lang }
+const t = useTranslations(lang)
+
+const services = [
+  'weathering', 'colorimetry', 'spectroscopy',
+  'evaluation', 'measurement', 'support',
+] as const
+
+const industries = ['automotive','plastics','coatings','electrical','labels','components','rnd'] as const
+---
+
+<BaseLayout title={t('nav.home')} lang={lang}>
+
+  <!-- Hero -->
+  <section class="relative bg-primary text-white overflow-hidden min-h-[500px] md:min-h-[620px]">
+    <!-- Base dark gradient -->
+    <div class="absolute inset-0 bg-gradient-to-br from-primary via-primary to-[#0a2a40]"></div>
+
+    <!-- Hero image — all screen sizes with per-breakpoint gradient treatment -->
+    <!-- Mobile: full-section background | md: right 50% | lg: right 60% -->
+    <div class="absolute inset-0 md:left-auto md:w-1/2 lg:w-[60%]">
+      <img
+        src="/images/xenon-chamber.jpg"
+        alt="Xenon Weathering Chamber"
+        class="w-full h-full object-cover object-center"
+        fetchpriority="high"
+        decoding="async"
+      />
+      <!-- Mobile: lighter gradient — image shows on right, text stays readable on left -->
+      <div class="absolute inset-0 md:hidden bg-gradient-to-r from-primary/95 via-primary/55 to-primary/10"></div>
+      <!-- md+: faster fade so image is visible sooner -->
+      <div class="absolute inset-0 hidden md:block bg-gradient-to-r from-primary via-primary/30 to-transparent"></div>
+      <!-- Bottom vignette on all sizes -->
+      <div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-24 lg:py-36">
+      <div class="max-w-xl">
+        <div class="inline-flex items-center gap-2 bg-accent/20 border border-accent/30 text-accent text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-6">
+          KAIBELAB · Aguascalientes, México
+        </div>
+        <h1 class="text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-5">
+          {t('hero.headline')}
+        </h1>
+        <p class="text-lg text-white/70 mb-10 max-w-lg leading-relaxed">
+          {t('hero.subheadline')}
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href={`/${lang}/contact`}
+            class="bg-accent hover:bg-accent-dark text-white font-semibold px-8 py-3 rounded text-sm transition-colors text-center">
+            {t('hero.cta.primary')}
+          </a>
+          <a href={`/${lang}/services`}
+            class="border border-white/30 hover:border-accent hover:text-accent text-white font-semibold px-8 py-3 rounded text-sm transition-colors text-center">
+            {t('hero.cta.secondary')}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Overview -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-primary mb-3">{t('services.title')}</h2>
+        <p class="text-gray-500 max-w-xl mx-auto">{t('services.subtitle')}</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {services.map((key) => (
+          <a href={`/${lang}/services`}
+            class="group border border-gray-100 rounded-lg p-6 hover:border-accent hover:shadow-md transition-all">
+            <div class="w-8 h-0.5 bg-accent mb-5"></div>
+            <h3 class="text-base font-semibold text-primary mb-2 group-hover:text-accent transition-colors">
+              {t(`service.${key}.name` as any)}
+            </h3>
+            <p class="text-sm text-gray-500 leading-relaxed">
+              {t(`service.${key}.desc` as any)}
+            </p>
+          </a>
+        ))}
+      </div>
+      <div class="text-center mt-10">
+        <a href={`/${lang}/services`}
+          class="inline-block border border-primary text-primary hover:bg-primary hover:text-white font-semibold px-6 py-2 rounded text-sm transition-colors">
+          {lang === 'es' ? 'Ver todos los servicios →' : 'View all services →'}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Xenon Feature Strip -->
+  <section class="py-20 bg-surface">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl font-bold text-primary mb-4">{t('services.xenon.title')}</h2>
+          <p class="text-gray-600 leading-relaxed mb-8">{t('services.xenon.desc')}</p>
+          <a href={`/${lang}/services`}
+            class="bg-accent hover:bg-accent-dark text-white font-semibold px-6 py-2 rounded text-sm transition-colors">
+            {lang === 'es' ? 'Ver detalles →' : 'View details →'}
+          </a>
+        </div>
+        <div class="rounded-xl overflow-hidden aspect-video bg-primary/5">
+          <img
+            src="/images/xenon-chamber.jpg"
+            alt={t('services.xenon.title')}
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Industries (teaser → links to /sectors) -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-primary text-center mb-12">{t('industries.title')}</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {industries.map((ind) => (
+          <a href={`/${lang}/sectors`}
+            class="border border-gray-100 rounded-lg p-5 text-center hover:border-accent hover:shadow-sm transition-all">
+            <p class="text-sm font-medium text-primary">{t(`industry.${ind}` as any)}</p>
+          </a>
+        ))}
+      </div>
+      <div class="text-center mt-10">
+        <a href={`/${lang}/sectors`}
+          class="inline-block border border-primary text-primary hover:bg-primary hover:text-white font-semibold px-6 py-2 rounded text-sm transition-colors">
+          {t('industries.cta')}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founder Program -->
+  <section class="py-20 bg-primary text-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="inline-flex items-center gap-2 bg-accent/20 border border-accent/30 text-accent text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-6">
+        {t('founder.title')}
+      </div>
+      <h2 class="text-3xl font-bold mb-4">{t('founder.title')}</h2>
+      <p class="text-white/70 text-lg mb-8 leading-relaxed">{t('founder.desc')}</p>
+      <a href={`/${lang}/contact`}
+        class="bg-accent hover:bg-accent-dark text-white font-semibold px-8 py-3 rounded text-sm transition-colors">
+        {t('founder.cta')}
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

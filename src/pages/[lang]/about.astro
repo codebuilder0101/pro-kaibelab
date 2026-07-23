@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { useTranslations } from '../../i18n/utils'
+import type { Lang } from '../../i18n/ui'
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }]
+}
+
+const { lang } = Astro.params as { lang: Lang }
+const t = useTranslations(lang)
+
+const partners = [
+  { key: 'fiberlab' as const, icon: '🔭' },
+  { key: 'tec' as const,      icon: '🎓' },
+  { key: 'cio' as const,      icon: '🔬' },
+]
+---
+
+<BaseLayout title={t('about.page.title')} lang={lang}>
+
+  <section class="relative bg-primary text-white py-14 md:py-20 overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="/images/lab-hero.webp" alt="" class="w-full h-full object-cover opacity-15" loading="lazy" decoding="async" />
+      <div class="absolute inset-0 bg-primary/65"></div>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-accent text-xs font-bold uppercase tracking-widest mb-2">KAIBELAB</p>
+      <h1 class="text-4xl font-extrabold">{t('about.page.title')}</h1>
+    </div>
+  </section>
+
+  <!-- Qué es KAIBELAB + Technical Direction -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <!-- Xenon image + Qué es KAIBELAB -->
+        <div class="flex flex-col gap-6">
+          <div class="rounded-xl overflow-hidden aspect-video bg-white border border-gray-100">
+            <img
+              src="/images/xenon-chamber.jpg"
+              alt="Cámara de Intemperismo Xenón, KAIBELAB"
+              class="w-full h-full object-contain p-4"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-primary mb-4">{t('about.origin.title')}</h2>
+            <p class="text-gray-600 leading-relaxed">{t('about.origin.body')}</p>
+          </div>
+        </div>
+        <!-- Technical Direction -->
+        <div class="bg-surface rounded-xl p-8">
+          <h2 class="text-2xl font-bold text-primary mb-6">{t('about.founder.title')}</h2>
+          <p class="text-gray-600 leading-relaxed">{t('about.founder.body')}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission & Vision -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="border-l-4 border-accent pl-8">
+          <h2 class="text-xl font-bold text-primary mb-3">{t('about.mission.title')}</h2>
+          <p class="text-gray-600 leading-relaxed">{t('about.mission.body')}</p>
+        </div>
+        <div class="border-l-4 border-primary pl-8">
+          <h2 class="text-xl font-bold text-primary mb-3">{t('about.vision.title')}</h2>
+          <p class="text-gray-600 leading-relaxed">{t('about.vision.body')}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

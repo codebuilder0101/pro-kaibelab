@@ -1,0 +1,220 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { useTranslations } from '../../i18n/utils'
+import type { Lang } from '../../i18n/ui'
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }]
+}
+
+const { lang } = Astro.params as { lang: Lang }
+const t = useTranslations(lang)
+
+const coreServices = [
+  'weathering', 'colorimetry', 'spectroscopy',
+  'evaluation', 'measurement', 'support',
+] as const
+
+const compServices = ['env','mech','thermal','spectral'] as const
+
+// Equipment sections — alternating layout via `reverse` flag
+const equipment = [
+  {
+    key: 'hd702' as const,
+    image: '/images/HD_E702.png',
+    bg: 'bg-surface',
+    reverse: false,
+  },
+  {
+    key: 'ipx8' as const,
+    image: '/images/IPX8.jpg',
+    bg: 'bg-white',
+    reverse: true,
+  },
+  {
+    key: 's10' as const,
+    image: '/images/S_10.png',
+    bg: 'bg-surface',
+    reverse: false,
+  },
+  {
+    key: 'tcc1000' as const,
+    image: '/images/TCC_1000.png',
+    bg: 'bg-white',
+    reverse: true,
+  },
+] as const
+---
+
+<BaseLayout title={t('services.page.title')} lang={lang}>
+
+  <!-- Page hero -->
+  <section class="relative bg-primary text-white py-14 md:py-20 overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="/images/lab-hero.webp" alt="" class="w-full h-full object-cover opacity-15" loading="lazy" decoding="async" />
+      <div class="absolute inset-0 bg-primary/65"></div>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-accent text-xs font-bold uppercase tracking-widest mb-2">KAIBELAB</p>
+      <h1 class="text-4xl font-extrabold mb-3">{t('services.page.title')}</h1>
+      <p class="text-white/60 text-lg max-w-xl">{t('services.page.subtitle')}</p>
+    </div>
+  </section>
+
+  <!-- ── Xenon Weathering Chamber ────────────── -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div class="rounded-xl overflow-hidden aspect-video bg-primary/5">
+          <img
+            src="/images/xenon-chamber.jpg"
+            alt={t('services.xenon.title')}
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <div>
+          <h2 class="text-3xl font-bold text-primary mb-2">{t('services.xenon.title')}</h2>
+          <p class="text-accent text-sm font-semibold mb-5">{t('services.xenon.service' as any)}</p>
+          <p class="text-gray-600 leading-relaxed mb-6">{t('services.xenon.desc' as any)}</p>
+
+          <!-- Evaluation conditions -->
+          <div class="bg-surface rounded-xl p-5 mb-6">
+            <h3 class="text-xs font-bold text-primary mb-3 uppercase tracking-wide">
+              {t('services.xenon.conditions.title' as any)}
+            </h3>
+            <ul class="space-y-1.5">
+              {(['cond1','cond2','cond3','cond4','cond5'] as const).map((c) => (
+                <li class="flex items-center gap-3 text-sm text-gray-700">
+                  <div class="w-1.5 h-1.5 rounded-full bg-accent shrink-0"></div>
+                  {t(`services.xenon.${c}` as any)}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Normativa de referencia -->
+          <div class="mb-6">
+            <p class="text-xs font-bold text-primary mb-2 uppercase tracking-wide">
+              {t('services.xenon.standards.title' as any)}
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed font-medium">
+              {t('services.xenon.standards.list' as any)}
+            </p>
+          </div>
+
+          <!-- Application -->
+          <p class="text-sm text-gray-500 leading-relaxed mb-6">{t('services.xenon.application.body' as any)}</p>
+
+          <a href={`/${lang}/contact`}
+            class="bg-accent hover:bg-accent-dark text-white font-semibold px-6 py-2 rounded text-sm transition-colors">
+            {t('nav.cta')}
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 4 Equipment Sections ─────────────────── -->
+  {equipment.map(({ key, image, bg, reverse }) => (
+    <section class={`py-20 ${bg}`}>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+          <!-- Image: always first in DOM (mobile top). On reverse=true, move to right on desktop -->
+          <div class={`rounded-xl bg-white border border-gray-100 flex items-center justify-center aspect-4/3 p-6 ${reverse ? 'lg:order-last' : ''}`}>
+            <img
+              src={image}
+              alt={t(`equip.${key}.title` as any)}
+              class="w-full h-full object-contain"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+
+          <!-- Text: on reverse=true, move to left on desktop -->
+          <div class={reverse ? 'lg:order-first' : ''}>
+            <div class="text-accent text-xs font-bold uppercase tracking-widest mb-3">
+              {t(`equip.${key}.label` as any)}
+            </div>
+            <h2 class="text-3xl font-bold text-primary mb-4">{t(`equip.${key}.title` as any)}</h2>
+            <p class="text-gray-600 leading-relaxed mb-8">{t(`equip.${key}.desc` as any)}</p>
+            <a href={`/${lang}/contact`}
+              class="bg-accent hover:bg-accent-dark text-white font-semibold px-6 py-2 rounded text-sm transition-colors">
+              {t('nav.cta')}
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- ── Core Services (no emoji icons) ──────── -->
+  <section class="py-20 bg-surface">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-primary text-center mb-12">{t('services.title')}</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {coreServices.map((key) => (
+          <div class="bg-white border border-gray-100 rounded-lg p-6 hover:border-accent hover:shadow-md transition-all">
+            <div class="w-8 h-0.5 bg-accent mb-5"></div>
+            <h3 class="text-base font-semibold text-primary mb-2">{t(`service.${key}.name` as any)}</h3>
+            <p class="text-sm text-gray-500 leading-relaxed mb-3">{t(`service.${key}.desc` as any)}</p>
+            {(['weathering','spectroscopy','evaluation'] as const).includes(key as any) && (
+              <ul class="space-y-1 mt-3">
+                {(['item1','item2','item3','item4','item5'] as const).map((i) => (
+                  <li class="flex items-start gap-2 text-xs text-gray-500">
+                    <div class="w-1 h-1 rounded-full bg-accent shrink-0 mt-1.5"></div>
+                    {t(`service.${key}.${i}` as any)}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Complementary Capabilities ──────────── -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-primary mb-3">{t('services.complementary.title')}</h2>
+      <p class="text-gray-500 mb-10 max-w-xl">{t('services.complementary.desc')}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {compServices.map((key) => (
+          <div class="border border-gray-100 rounded-lg p-6 hover:border-accent hover:shadow-sm transition-all">
+            <h3 class="text-base font-semibold text-primary mb-2">{t(`comp.${key}.name` as any)}</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">{t(`comp.${key}.desc` as any)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Tier CTA ─────────────────────────────── -->
+  <section class="py-16 bg-primary text-white text-center">
+    <div class="max-w-2xl mx-auto px-4">
+      <p class="text-accent text-xs font-bold uppercase tracking-widest mb-3">
+        {lang === 'es' ? 'Cadena de suministro automotriz y más' : 'Automotive supply chain and beyond'}
+      </p>
+      <h2 class="text-2xl font-bold mb-4">
+        {lang === 'es'
+          ? 'Atendemos a empresas Tier 1, 2, 3 y 4, así como a Centros de Investigación y de Desarrollo Tecnológico'
+          : 'We serve Tier 1, 2, 3 & 4 companies and Technology Research & Development Centers'}
+      </h2>
+      <p class="text-white/60 mb-8 leading-relaxed">
+        {lang === 'es'
+          ? 'Si su organización requiere ensayos de materiales con respaldo normativo internacional, KAIBELAB tiene la capacidad y el rigor técnico para responder.'
+          : 'If your organization requires material testing backed by international standards, KAIBELAB has the capacity and technical rigor to deliver.'}
+      </p>
+      <a href={`/${lang}/contact`}
+        class="bg-accent hover:bg-accent-dark text-white font-semibold px-8 py-3 rounded text-sm transition-colors">
+        {t('nav.cta')}
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

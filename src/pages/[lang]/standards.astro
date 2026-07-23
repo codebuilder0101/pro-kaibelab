@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { useTranslations } from '../../i18n/utils'
+import type { Lang } from '../../i18n/ui'
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }]
+}
+
+const { lang } = Astro.params as { lang: Lang }
+const t = useTranslations(lang)
+const isEs = lang === 'es'
+
+const weatheringStandards = [
+  { code: 'ASTM G155',      desc: isEs ? 'Práctica estándar para la operación de equipos de arco de xenón para exposición de materiales no metálicos. Norma principal de referencia para intemperismo acelerado.' : 'Standard Practice for Operating Xenon Arc Light Apparatus for Exposure of Non-Metallic Materials. Primary reference standard for accelerated weathering.' },
+  { code: 'ASTM D4329',     desc: isEs ? 'Práctica estándar para exposición de plásticos con lámpara de fluorescencia ultravioleta (UV)' : 'Standard Practice for Fluorescent Ultraviolet (UV) Lamp Apparatus Exposure of Plastics' },
+  { code: 'ASTM D2565',     desc: isEs ? 'Práctica estándar para exposición con arco de xenón de plásticos destinados a aplicaciones exteriores' : 'Standard Practice for Xenon-Arc Exposure of Plastics Intended for Outdoor Applications' },
+  { code: 'ASTM D4587',     desc: isEs ? 'Práctica estándar para exposición de pinturas y recubrimientos a fluorescencia UV-condensación' : 'Standard Practice for Fluorescent UV-Condensation Exposures of Paint and Related Coatings' },
+  { code: 'AATCC 16',       desc: isEs ? 'Solidez del color a la luz: método de referencia para textiles y materiales relacionados.' : 'Colorfastness to Light: reference method for textiles and related materials.' },
+  { code: 'ISO 4892-2',     desc: isEs ? 'Plásticos — Métodos de exposición a fuentes de luz de laboratorio — Parte 2: Lámparas de arco de xenón' : 'Plastics — Methods of exposure to laboratory light sources — Part 2: Xenon-arc lamps' },
+  { code: 'ISO 7724',       desc: isEs ? 'Pinturas y barnices — Colorimetría (partes 1, 2 y 3)' : 'Paints and varnishes — Colorimetry (Parts 1, 2 and 3)' },
+  { code: 'ISO 17228',      desc: isEs ? 'Plásticos — Guía para la selección y uso de métodos normalizados de exposición y ensayo' : 'Plastics — Guidance for the selection and use of standardized methods for the exposure and testing of plastics' },
+  { code: 'ISO 105-B02',    desc: isEs ? 'Solidez del color a la luz artificial: Lámpara de arco de xenón' : 'Colour fastness to artificial light: Xenon arc fading lamp test' },
+  { code: 'ISO 105-B04',    desc: isEs ? 'Solidez del color a la intemperie: Exposición con lámpara de xenón detrás de vidrio' : 'Colour fastness to weathering: Exposure to daylight behind window glass (xenon lamp)' },
+  { code: 'SAE J2527',      desc: isEs ? 'Estándar de desempeño para exposición acelerada de materiales exteriores automotrices (arco de xenón)' : 'Performance Based Standard for Accelerated Exposure of Automotive Exterior Materials Using a Controlled Irradiance Xenon-Arc Apparatus' },
+  { code: 'SAE J2412',      desc: isEs ? 'Exposición acelerada de componentes de interiores automotrices con arco de xenón de irradiancia controlada' : 'Accelerated Exposure of Automotive Interior Trim Components Using a Controlled Irradiance Xenon-Arc Apparatus' },
+  { code: 'AATCC TM16-2003', desc: isEs ? 'Solidez del color a la luz: Exposición continua con lámpara de arco de xenón' : 'Colorfastness to Light: Continuous — Xenon arc lamp exposure method' },
+  { code: 'GB/T 8427',      desc: isEs ? 'Ensayo de solidez del color a la luz artificial: Método de lámpara de arco de xenón' : 'Colour fastness to artificial light: Xenon arc fading lamp test' },
+  { code: 'GB/T 8430',      desc: isEs ? 'Solidez del color a la intemperie artificial (lámpara de xenón)' : 'Colour fastness to weathering: Exposure to artificial weathering (xenon lamp)' },
+  { code: 'GB/T 14576',     desc: isEs ? 'Ensayo de solidez del color a la intemperie' : 'Colour fastness to light and weathering' },
+  { code: 'GB/T 15102-2006', desc: isEs ? 'Tableros de fibra prensada decorativa: Resistencia a la intemperie' : 'Impregnated decorative paper laminated wood panels — Weathering resistance' },
+  { code: 'GB/T 15104-2006', desc: isEs ? 'Tableros decorativos de madera: Resistencia a la intemperie acelerada' : 'Decorative wood panels — Accelerated weathering resistance' },
+]
+
+const colorimetryStandards = [
+  { code: 'ASTM D2244', desc: isEs ? 'Cálculo de diferencias de color a partir de medidas de reflectancia instrumentales' : 'Calculation of Color Tolerances and Color Differences from Instrumentally Measured Color Coordinates' },
+  { code: 'ASTM E1164', desc: isEs ? 'Obtención de datos espectrométricos para evaluación del color de objetos' : 'Obtaining Spectrometric Data for Object-Color Evaluation' },
+  { code: 'ISO 7724', desc: isEs ? 'Pinturas y barnices — Colorimetría' : 'Paints and varnishes — Colorimetry' },
+]
+
+const generalStandards = [
+  { code: 'ASTM E1131', desc: isEs ? 'Análisis de composición por termogravimetría' : 'Compositional Analysis by Thermogravimetry' },
+  { code: 'ISO 11357', desc: isEs ? 'Plásticos — Calorimetría diferencial de barrido (DSC)' : 'Plastics — Differential scanning calorimetry (DSC)' },
+  { code: 'ASTM E1252', desc: isEs ? 'Obtención de espectros de absorción infrarroja para análisis cualitativo' : 'General Technique for Obtaining Infrared Spectra for Qualitative Analysis' },
+  { code: 'ASTM B117', desc: isEs ? 'Operación del aparato de niebla salina (spray)' : 'Operation of the Salt Spray (Fog) Apparatus' },
+]
+
+const groups = [
+  { title: t('standards.weathering.title'), rows: weatheringStandards },
+  { title: t('standards.colorimetry.title'), rows: colorimetryStandards },
+  { title: t('standards.general.title'), rows: generalStandards },
+]
+---
+
+<BaseLayout title={t('standards.page.title')} lang={lang}>
+
+  <section class="relative bg-primary text-white py-14 md:py-20 overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="/images/lab-hero.webp" alt="" class="w-full h-full object-cover opacity-15" loading="lazy" decoding="async" />
+      <div class="absolute inset-0 bg-primary/65"></div>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-accent text-xs font-bold uppercase tracking-widest mb-2">KAIBELAB</p>
+      <h1 class="text-4xl font-extrabold mb-3">{t('standards.page.title')}</h1>
+      <p class="text-white/60 text-lg max-w-2xl">{t('standards.page.subtitle')}</p>
+    </div>
+  </section>
+
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+
+      <!-- Intro paragraphs -->
+      <div class="max-w-3xl space-y-3 border-l-4 border-accent pl-6">
+        <p class="text-gray-600 leading-relaxed text-sm">{t('standards.intro1' as any)}</p>
+        <p class="text-gray-600 leading-relaxed text-sm">{t('standards.intro2' as any)}</p>
+      </div>
+
+      {groups.map(({ title, rows }) => (
+        <div>
+          <h2 class="text-2xl font-bold text-primary mb-6 pb-3 border-b border-gray-100">{title}</h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-surface">
+                  <th class="text-left font-semibold text-primary px-4 py-3 w-44">
+                    {isEs ? 'Norma' : 'Standard'}
+                  </th>
+                  <th class="text-left font-semibold text-primary px-4 py-3">
+                    {isEs ? 'Descripción' : 'Description'}
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                {rows.map(({ code, desc }) => (
+                  <tr class="hover:bg-surface transition-colors">
+                    <td class="px-4 py-3 font-mono font-semibold text-accent whitespace-nowrap">{code}</td>
+                    <td class="px-4 py-3 text-gray-600 leading-relaxed">{desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+
+      <div class="bg-accent/5 border border-accent/20 rounded-lg p-6 text-sm text-gray-600 leading-relaxed">
+        <strong class="text-primary">{isEs ? 'Nota: ' : 'Note: '}</strong>{t('standards.note')}
+      </div>
+
+    </div>
+  </section>
+
+  <section class="py-16 bg-surface text-center">
+    <div class="max-w-xl mx-auto px-4">
+      <h2 class="text-2xl font-bold text-primary mb-4">
+        {isEs ? '¿Necesitas una norma específica?' : 'Need a specific standard?'}
+      </h2>
+      <p class="text-gray-500 mb-6">
+        {isEs
+          ? 'Trabajamos conforme a los requerimientos normativos de cada cliente y proyecto.'
+          : "We work according to each client's regulatory requirements."}
+      </p>
+      <a href={`/${lang}/contact`}
+        class="bg-primary hover:bg-primary/90 text-white font-semibold px-8 py-3 rounded text-sm transition-colors">
+        {t('nav.cta')}
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>
