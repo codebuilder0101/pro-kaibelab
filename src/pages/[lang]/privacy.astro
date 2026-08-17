@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import type { Lang } from '../../i18n/ui'
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }]
+}
+
+const { lang } = Astro.params as { lang: Lang }
+const es = lang === 'es'
+
+const title = es ? 'Aviso de Privacidad' : 'Privacy Notice'
+const desc = es
+  ? 'Aviso de privacidad y tratamiento de datos de KAIBELAB.'
+  : 'Privacy notice and data processing of KAIBELAB.'
+---
+
+<BaseLayout title={title} lang={lang} description={desc} noindex={true} pageType="legal">
+  <section class="bg-primary text-white py-14">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl font-extrabold">{title}</h1>
+    </div>
+  </section>
+
+  <section class="py-16 bg-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 prose-sm">
+      <div class="border-l-4 border-accent bg-surface rounded p-4 mb-8 text-sm text-gray-700">
+        {es
+          ? 'Borrador pendiente de revisión legal. Este texto es una estructura base y debe ser completado y validado por el responsable legal antes de su publicación definitiva.'
+          : 'Draft pending legal review. This text is a base structure and must be completed and validated by the legal owner before final publication.'}
+      </div>
+
+      <div class="space-y-6 text-gray-700 leading-relaxed">
+        <div>
+          <h2 class="text-xl font-bold text-primary mb-2">{es ? 'Responsable' : 'Data controller'}</h2>
+          <p>{es
+            ? 'KAIBELAB, marca de KAIBEL, con domicilio en México. Correo de contacto: contacto@kaibelab.com.'
+            : 'KAIBELAB, a brand of KAIBEL, domiciled in Mexico. Contact email: contacto@kaibelab.com.'}</p>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-primary mb-2">{es ? 'Datos que recabamos' : 'Data we collect'}</h2>
+          <p>{es
+            ? 'Nombre, empresa, correo electrónico, teléfono y los datos que nos proporciones a través de nuestros formularios de contacto y cotización.'
+            : 'Name, company, email, phone and any data you provide through our contact and quote forms.'}</p>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-primary mb-2">{es ? 'Finalidad' : 'Purpose'}</h2>
+          <p>{es
+            ? 'Atender tus solicitudes de cotización e información, y dar seguimiento comercial y técnico.'
+            : 'To handle your quote and information requests, and to provide commercial and technical follow-up.'}</p>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-primary mb-2">{es ? 'Cookies y analítica' : 'Cookies and analytics'}</h2>
+          <p>{es
+            ? 'Usamos cookies de medición solo con tu consentimiento. Puedes aceptarlas o rechazarlas desde el aviso de cookies.'
+            : 'We use measurement cookies only with your consent. You can accept or reject them from the cookie banner.'}</p>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-primary mb-2">{es ? 'Tus derechos' : 'Your rights'}</h2>
+          <p>{es
+            ? 'Puedes ejercer tus derechos de acceso, rectificación, cancelación y oposición escribiendo a contacto@kaibelab.com.'
+            : 'You may exercise your rights of access, rectification, cancellation and objection by writing to contacto@kaibelab.com.'}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

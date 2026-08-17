@@ -1,0 +1,148 @@
+================================================================================
+KAIBELAB · FASE 2 — CONFIGURACIÓN DE GTM, GA4 Y HUBSPOT
+Diccionario de eventos y propiedades. Referencia para quien configure las
+cuentas.
+================================================================================
+
+El sitio ya empuja todos los eventos y todos los datos de atribución. Lo que
+falta es del lado de las cuentas: crear las propiedades en HubSpot y las
+etiquetas en GTM. Los nombres de este documento deben copiarse EXACTAMENTE.
+
+
+--------------------------------------------------------------------------------
+1. PROPIEDADES DE CONTACTO A CREAR EN HUBSPOT
+--------------------------------------------------------------------------------
+
+Ubicación: Configuración › Propiedades › Propiedades de contacto › Crear.
+Tipo para todas: texto de una línea.
+
+  NOMBRE INTERNO      ETIQUETA SUGERIDA            EJEMPLO
+  utm_source          Origen de campaña            google
+  utm_medium          Medio de campaña             cpc
+  utm_campaign        Nombre de campaña            intemperismo-2026-q3
+  utm_content         Variante de landing          lp-automotriz
+  utm_term            Palabra clave                ensayo-intemperismo
+  gclid               ID de clic de Google Ads     Cj0KCQjw...
+  gbraid              ID de clic de Google (app)   0AAAAA...
+  wbraid              ID de clic de Google (web)   0AAAAA...
+  msclkid             ID de clic de Microsoft      a1b2c3...
+  landing_page        Página de aterrizaje         https://kaibelab.com/es/lp/automotriz/
+  referrer            Referente externo            https://www.google.com/
+  landing_variant     Variante que generó el lead  automotive
+
+  IMPORTANTE
+  El nombre interno debe coincidir carácter por carácter. HubSpot descarta en
+  silencio los campos que no reconoce: el lead entraría igual, pero SIN
+  atribución, y la prueba de cierre 6.2 no se podría superar.
+
+  Valores posibles de landing_variant (identificadores estables, no cambian
+  aunque cambie la URL o el texto):
+      weathering · ipx8 · automotive · electronics
+
+
+--------------------------------------------------------------------------------
+2. EVENTOS QUE EL SITIO EMPUJA AL DATALAYER
+--------------------------------------------------------------------------------
+
+Todos los eventos llevan además estos parámetros de contexto:
+    page_type      home · landing · services · sectors · standards · about ·
+                   contact · legal · 404
+    language       es · en
+    landing_id     solo en landings: weathering · ipx8 · automotive · electronics
+    landing_kind   solo en landings: offer · segment
+
+  EVENTO            CUÁNDO SE DISPARA                  PARÁMETROS PROPIOS
+  landing_view      Se ve una landing de campaña       landing_id, landing_kind
+  cta_click         Clic en cualquier botón marcado    link_label, link_location
+                    como llamada a la acción
+  whatsapp_click    Clic en WhatsApp (botón flotante,  link_label, link_location
+                    pie de página o formulario)
+  phone_click       Clic en un teléfono                link_label, link_location
+  email_click       Clic en un correo                  link_label, link_location
+  outbound_click    Clic a un sitio externo            link_label, link_location,
+                                                       link_url
+  form_start        Primera interacción con el         form_name, landing_id
+                    formulario
+  generate_lead     HubSpot CONFIRMÓ la recepción      form_name, service,
+                    del formulario                     landing_id, landing_kind
+
+  Valores de link_location ya implementados:
+      header · header-mobile · floating · contact-form · landing-form ·
+      home-hero-primary · home-hero-secondary · home-founder
+
+  Valores de form_name:
+      contact          formulario de la página de contacto
+      lp-weathering    formulario de cada landing, con su identificador
+      lp-ipx8
+      lp-automotive
+      lp-electronics
+
+
+--------------------------------------------------------------------------------
+3. CONFIGURACIÓN EN GOOGLE TAG MANAGER
+--------------------------------------------------------------------------------
+
+  PASO 1 · Variables de capa de datos
+  Crear una variable de tipo "Variable de capa de datos" por cada nombre:
+      page_type · language · landing_id · landing_kind · link_label ·
+      link_location · link_url · form_name · service
+
+  PASO 2 · Activadores
+  Crear un activador de tipo "Evento personalizado" por cada evento de la
+  sección 2. El nombre del evento debe escribirse exactamente igual.
+
+  PASO 3 · Etiquetas
+  Una etiqueta de "Evento de GA4" por activador, enviando como parámetros las
+  variables que correspondan según la tabla.
+
+  PASO 4 · Consentimiento
+  Todas las etiquetas deben quedar con la comprobación de consentimiento
+  adicional para analytics_storage. El sitio ya bloquea los eventos antes de
+  aceptar, pero la doble protección es la que exige el plan.
+
+  PASO 5 · Publicar
+  Publicar la versión del contenedor y anotar el número de versión en el
+  registro de la fase.
+
+
+--------------------------------------------------------------------------------
+4. CONFIGURACIÓN EN GA4
+--------------------------------------------------------------------------------
+
+  1. Administrar › Eventos › marcar generate_lead como EVENTO CLAVE.
+     Es la única conversión. Ningún otro evento debe marcarse como clave, para
+     no romper la decisión de fuente única de verdad.
+
+  2. Administrar › Definiciones personalizadas › crear dimensiones
+     personalizadas de ámbito EVENTO para:
+         landing_id · landing_kind · link_location · form_name · page_type
+     Sin esto los parámetros llegan a GA4 pero no se pueden usar en informes,
+     y no se podrían comparar las variantes entre sí.
+
+  3. Validar en DebugView, en español y en inglés, recorriendo las 8 páginas
+     de landing. Es la prueba de cierre 6.1.
+
+
+--------------------------------------------------------------------------------
+5. COMPORTAMIENTO ESPERADO QUE CONVIENE CONOCER
+--------------------------------------------------------------------------------
+
+  · Si el visitante RECHAZA las cookies, el formulario sigue funcionando y el
+    lead llega completo a HubSpot con su atribución, pero GA4 no cuenta esa
+    conversión. Es la consecuencia correcta del consentimiento y está previsto
+    en el plan: prevalece el cumplimiento sobre la medición. Implica que la
+    cifra de GA4 será siempre igual o menor que la de HubSpot.
+
+  · generate_lead se dispara UNA sola vez y solo después de que HubSpot
+    confirma la recepción. Nunca al hacer clic y nunca si el envío falla.
+    El botón queda bloqueado durante el envío para que un doble clic no genere
+    dos contactos ni dos conversiones.
+
+  · La atribución se guarda en sessionStorage, no en una cookie: se borra al
+    cerrar la pestaña. Un visitante que vuelve días después por acceso directo
+    llega sin atribución, que es el comportamiento correcto.
+
+  · Si el visitante llega con una campaña y luego entra con otra distinta en la
+    misma sesión, gana la última. Es el modelo de último clic no directo.
+
+================================================================================

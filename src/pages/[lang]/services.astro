@@ -1,7 +1,14 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import { Image } from 'astro:assets'
+import xenonChamber from '../../assets/xenon-chamber.jpg'
+import hd702Img from '../../assets/HD_E702.png'
+import ipx8Img from '../../assets/IPX8.jpg'
+import s10Img from '../../assets/S_10.png'
+import tcc1000Img from '../../assets/TCC_1000.png'
 import { useTranslations } from '../../i18n/utils'
 import type { Lang } from '../../i18n/ui'
+import { servicesSchema } from '../../config/organization'
 
 export function getStaticPaths() {
   return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }]
@@ -21,32 +28,38 @@ const compServices = ['env','mech','thermal','spectral'] as const
 const equipment = [
   {
     key: 'hd702' as const,
-    image: '/images/HD_E702.png',
+    image: hd702Img,
     bg: 'bg-surface',
     reverse: false,
   },
   {
     key: 'ipx8' as const,
-    image: '/images/IPX8.jpg',
+    image: ipx8Img,
     bg: 'bg-white',
     reverse: true,
   },
   {
     key: 's10' as const,
-    image: '/images/S_10.png',
+    image: s10Img,
     bg: 'bg-surface',
     reverse: false,
   },
   {
     key: 'tcc1000' as const,
-    image: '/images/TCC_1000.png',
+    image: tcc1000Img,
     bg: 'bg-white',
     reverse: true,
   },
 ] as const
 ---
 
-<BaseLayout title={t('services.page.title')} lang={lang}>
+<BaseLayout
+  title={t('services.page.title')}
+  lang={lang}
+  description={t('meta.services.desc')}
+  pageType="services"
+  jsonLd={servicesSchema(lang)}
+>
 
   <!-- Page hero -->
   <section class="relative bg-primary text-white py-14 md:py-20 overflow-hidden">
@@ -67,8 +80,8 @@ const equipment = [
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         <div class="rounded-xl overflow-hidden aspect-video bg-primary/5">
-          <img
-            src="/images/xenon-chamber.jpg"
+          <Image
+            src={xenonChamber}
             alt={t('services.xenon.title')}
             class="w-full h-full object-cover"
             loading="lazy"
@@ -107,7 +120,7 @@ const equipment = [
           <!-- Application -->
           <p class="text-sm text-gray-500 leading-relaxed mb-6">{t('services.xenon.application.body' as any)}</p>
 
-          <a href={`/${lang}/contact`}
+          <a href={`/${lang}/contact`} data-track="cta" data-track-location="services-card-weathering"
             class="bg-accent hover:bg-accent-dark text-white font-semibold px-6 py-2 rounded text-sm transition-colors">
             {t('nav.cta')}
           </a>
@@ -125,7 +138,7 @@ const equipment = [
 
           <!-- Image: always first in DOM (mobile top). On reverse=true, move to right on desktop -->
           <div class={`rounded-xl bg-white border border-gray-100 flex items-center justify-center aspect-4/3 p-6 ${reverse ? 'lg:order-last' : ''}`}>
-            <img
+            <Image
               src={image}
               alt={t(`equip.${key}.title` as any)}
               class="w-full h-full object-contain"
@@ -141,7 +154,7 @@ const equipment = [
             </div>
             <h2 class="text-3xl font-bold text-primary mb-4">{t(`equip.${key}.title` as any)}</h2>
             <p class="text-gray-600 leading-relaxed mb-8">{t(`equip.${key}.desc` as any)}</p>
-            <a href={`/${lang}/contact`}
+            <a href={`/${lang}/contact`} data-track="cta" data-track-location={`services-equipment-${key}`}
               class="bg-accent hover:bg-accent-dark text-white font-semibold px-6 py-2 rounded text-sm transition-colors">
               {t('nav.cta')}
             </a>
@@ -210,7 +223,7 @@ const equipment = [
           ? 'Si su organización requiere ensayos de materiales con respaldo normativo internacional, KAIBELAB tiene la capacidad y el rigor técnico para responder.'
           : 'If your organization requires material testing backed by international standards, KAIBELAB has the capacity and technical rigor to deliver.'}
       </p>
-      <a href={`/${lang}/contact`}
+      <a href={`/${lang}/contact`} data-track="cta" data-track-location="services-final"
         class="bg-accent hover:bg-accent-dark text-white font-semibold px-8 py-3 rounded text-sm transition-colors">
         {t('nav.cta')}
       </a>

@@ -2,14 +2,65 @@
 import '../styles/global.css'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
+import Analytics from '../components/Analytics.astro'
+import { SITE } from '../config/site'
+import { getRouteFromUrl } from '../i18n/utils'
+import type { Lang } from '../i18n/ui'
 
 interface Props {
   title: string
   lang: string
   description?: string
+  image?: string
+  noindex?: boolean
+  /**
+   * Path (after the language prefix) for each language, e.g.
+   * { es: '/lp/automotriz/', en: '/lp/automotive/' }.
+   * Required whenever the slug differs per language — deriving alternates from
+   * the current URL would otherwise emit /en/lp/automotriz/, which is a 404 and
+   * silently breaks hreflang.
+   */
+  pathByLang?: Record<string, string>
+  /** JSON-LD objects rendered into <head>, one <script> each. */
+  jsonLd?: Record<string, unknown>[]
+  /** Page classification for analytics: 'home' | 'landing' | 'contact' | … */
+  pageType?: string
+  /** Stable landing ID from config/landings.ts, on campaign landings only. */
+  landingId?: string
+  /** 'offer' | 'segment', on campaign landings only. */
+  landingKind?: string
 }
 
-const { title, lang, description = 'Laboratorio de Materiales y Ensayos Especializados — KAIBELAB' } = Astro.props
+const {
+  title,
+  lang,
+  description = 'Laboratorio de Materiales y Ensayos Especializados — KAIBELAB',
+  image = '/images/logo.jpeg',
+  noindex = false,
+  pathByLang,
+  jsonLd = [],
+  pageType = 'page',
+  landingId,
+  landingKind,
+} = Astro.props
+
+// Canonical + hreflang alternates. Use the explicit per-language paths when the
+// page provides them; otherwise derive from the current route (same slug in
+// both languages, which is the case for every static page).
+const route = getRouteFromUrl(Astro.url).replace(/^\/+|\/+$/g, '')
+const path = route ? `/${route}/` : '/'
+const pathFor = (l: string) => pathByLang?.[l] ?? path
+
+const canonical = new URL(`/${lang}${pathFor(lang)}`, SITE.url).href
+const alternates = SITE.locales.map((l) => ({
+  hreflang: l,
+  href: new URL(`/${l}${pathFor(l)}`, SITE.url).href,
+}))
+const xDefault = new URL(`/${SITE.defaultLocale}${pathFor(SITE.defaultLocale)}`, SITE.url).href
+const ogImage = new URL(image, SITE.url).href
+const fullTitle = `${title} | KAIBELAB`
+
+const pageContext = { page_type: pageType, language: lang, landing_id: landingId, landing_kind: landingKind }
 ---
 
 <!doctype html>
@@ -18,13 +69,57 @@ const { title, lang, description = 'Laboratorio de Materiales y Ensayos Especial
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <title>{title} | KAIBELAB</title>
+    <title>{fullTitle}</title>
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={xDefault} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="KAIBELAB" />
+    <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Structured data (Phase 2 · SEO) -->
+    {jsonLd.map((schema) => (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
+    ))}
+
+    <!--
+      Fonts load without blocking the first paint: the stylesheet is fetched at
+      low priority and promoted to `all` once ready. Montserrat already carries
+      display=swap, so text renders immediately in the system fallback.
+      The <noscript> copy keeps the font for scripting-disabled visitors.
+    -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      media="print"
+      onload="this.media='all'; this.onload=null;"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      />
+    </noscript>
   </head>
   <body>
+    <Analytics lang={lang as Lang} />
     <Header lang={lang} />
     <main>
       <slot />
@@ -37,6 +132,7 @@ const { title, lang, description = 'Laboratorio de Materiales y Ensayos Especial
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp +52 449 736 6489"
+      data-track-location="floating"
       class="group fixed bottom-6 right-6 z-50 flex items-center bg-[#25D366] hover:bg-[#1fba5a] shadow-lg hover:shadow-xl rounded-full overflow-hidden transition-all duration-300"
     >
       <span class="flex items-center justify-center w-14 h-14 shrink-0">
@@ -48,5 +144,20 @@ const { title, lang, description = 'Laboratorio de Materiales y Ensayos Especial
         +52 449 736 6489
       </span>
     </a>
+
+    <!-- Page context for analytics, read by scripts/tracking.ts -->
+    <script type="application/json" id="kb-page-context" is:inline set:html={JSON.stringify(pageContext)} />
+    <script>
+      import { initTracking } from '../scripts/tracking'
+      import { captureAttribution } from '../scripts/attribution'
+
+      // Campaign parameters are captured on every page, not just landings, so a
+      // visitor who arrives on a landing and converts on /contact keeps their source.
+      captureAttribution()
+
+      const el = document.getElementById('kb-page-context')
+      const context = el?.textContent ? JSON.parse(el.textContent) : { page_type: 'page', language: 'es' }
+      initTracking(context)
+    </script>
   </body>
 </html>

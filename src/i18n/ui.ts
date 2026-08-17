@@ -206,6 +206,35 @@ export const ui = {
     'contact.form.send.whatsapp': 'Enviar por WhatsApp',
     'contact.whatsapp.label': 'WhatsApp directo',
     'contact.email.label': 'Correo electrónico',
+
+    // Cookie consent
+    'consent.message': 'Usamos cookies para medir y mejorar tu experiencia. Puedes aceptarlas o rechazarlas.',
+    'consent.accept': 'Aceptar',
+    'consent.reject': 'Rechazar',
+    'consent.privacy': 'Aviso de privacidad',
+
+    // Lead form (HubSpot)
+    'form.consent.label': 'Acepto el aviso de privacidad y el tratamiento de mis datos.',
+    'form.submit': 'Enviar solicitud',
+    'form.sending': 'Enviando…',
+    'form.success.title': '¡Gracias! Hemos recibido tu solicitud.',
+    'form.success.body': 'Nuestro equipo técnico te contactará a la brevedad.',
+    'form.error': 'No se pudo enviar. Revisa los datos e inténtalo de nuevo.',
+    'form.error.required': 'Completa los campos obligatorios.',
+    'form.error.email': 'Introduce un correo electrónico válido.',
+    'form.error.phone': 'Introduce un teléfono válido (7 a 15 dígitos).',
+    'form.error.consent': 'Debes aceptar el aviso de privacidad.',
+
+    // Campaign landing copy now lives in config/landings.ts, where each variant
+    // owns its own text. Only the per-page meta descriptions stay here.
+
+    // Per-page meta descriptions (Phase 2 · SEO)
+    'meta.home.desc': 'Laboratorio de materiales y ensayos especializados en Aguascalientes. Intemperismo acelerado, impermeabilidad IPX8 y caracterización de materiales conforme a ASTM, ISO y SAE.',
+    'meta.services.desc': 'Servicios del laboratorio: intemperismo acelerado con cámara de Xenón, impermeabilidad IPX8, colorimetría, brillo y caracterización de materiales conforme a normativa aplicable.',
+    'meta.sectors.desc': 'Atendemos los sectores automotriz, plásticos, recubrimientos, eléctrico y electrónico, etiquetas técnicas, componentes industriales e investigación y desarrollo.',
+    'meta.standards.desc': 'Normativa de referencia de KAIBELAB: ASTM, ISO, SAE, AATCC e IEC aplicadas a nuestros ensayos de intemperismo, impermeabilidad y caracterización de materiales.',
+    'meta.about.desc': 'KAIBELAB es el laboratorio de materiales y ensayos especializados de KAIBEL, con dirección técnica especializada y equipamiento de vanguardia en Aguascalientes, México.',
+    'meta.contact.desc': 'Contacta a KAIBELAB para solicitar una cotización de ensayos de materiales. Aguascalientes, México. Respuesta por correo, teléfono o WhatsApp.',
   },
 
   en: {
@@ -409,6 +438,35 @@ export const ui = {
     'contact.form.send.whatsapp': 'Send via WhatsApp',
     'contact.whatsapp.label': 'Direct WhatsApp',
     'contact.email.label': 'Email',
+
+    // Cookie consent
+    'consent.message': 'We use cookies to measure and improve your experience. You can accept or reject them.',
+    'consent.accept': 'Accept',
+    'consent.reject': 'Reject',
+    'consent.privacy': 'Privacy notice',
+
+    // Lead form (HubSpot)
+    'form.consent.label': 'I accept the privacy notice and the processing of my data.',
+    'form.submit': 'Send request',
+    'form.sending': 'Sending…',
+    'form.success.title': 'Thank you! We have received your request.',
+    'form.success.body': 'Our technical team will contact you shortly.',
+    'form.error': 'Could not send. Please check your details and try again.',
+    'form.error.required': 'Please complete the required fields.',
+    'form.error.email': 'Please enter a valid email address.',
+    'form.error.phone': 'Please enter a valid phone number (7 to 15 digits).',
+    'form.error.consent': 'You must accept the privacy notice.',
+
+    // Campaign landing copy now lives in config/landings.ts, where each variant
+    // owns its own text. Only the per-page meta descriptions stay here.
+
+    // Per-page meta descriptions (Phase 2 · SEO)
+    'meta.home.desc': 'Materials and specialized testing laboratory in Aguascalientes, Mexico. Accelerated weathering, IPX8 waterproofing and material characterization per ASTM, ISO and SAE.',
+    'meta.services.desc': 'Laboratory services: accelerated weathering with Xenon chamber, IPX8 waterproofing, colorimetry, gloss and material characterization per applicable standards.',
+    'meta.sectors.desc': 'We serve the automotive, plastics, coatings, electrical and electronics, technical labels, industrial components, and research and development sectors.',
+    'meta.standards.desc': 'KAIBELAB reference standards: ASTM, ISO, SAE, AATCC and IEC applied to our weathering, waterproofing and material characterization testing.',
+    'meta.about.desc': 'KAIBELAB is the materials and specialized testing laboratory of KAIBEL, with specialized technical direction and advanced equipment in Aguascalientes, Mexico.',
+    'meta.contact.desc': 'Contact KAIBELAB to request a materials testing quote. Aguascalientes, Mexico. Reach us by email, phone or WhatsApp.',
   },
 } as const
 

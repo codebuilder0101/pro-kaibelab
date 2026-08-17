@@ -1,0 +1,204 @@
+---
+/**
+ * Campaign landing template — Phase 2.
+ *
+ * One template renders every variant defined in config/landings.ts. Adding a
+ * landing means adding a data entry, never copying this file: the plan asks for
+ * "variants on the same template", and duplicated templates are how tracking and
+ * SEO quietly drift apart between pages.
+ */
+import { Image } from 'astro:assets'
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import { useTranslations } from '../../../i18n/utils'
+import type { Lang } from '../../../i18n/ui'
+import { LANDINGS, landingAlternates, type Landing } from '../../../config/landings'
+import { organizationSchema, landingServiceSchema } from '../../../config/organization'
+import { SITE } from '../../../config/site'
+
+export function getStaticPaths() {
+  return SITE.locales.flatMap((lang) =>
+    LANDINGS.map((landing) => ({
+      params: { lang, slug: landing.slug[lang] },
+      props: { landing },
+    })),
+  )
+}
+
+const { lang } = Astro.params as { lang: Lang }
+const { landing } = Astro.props as { landing: Landing }
+const t = useTranslations(lang)
+const copy = landing.copy[lang]
+
+const serviceOptions =
+  lang === 'es'
+    ? ['Intemperismo Acelerado', 'Colorimetría y Brillo', 'Espectroscopía', 'Evaluación de Materiales', 'Medición Especializada', 'Otro']
+    : ['Accelerated Weathering', 'Colorimetry & Gloss', 'Spectroscopy', 'Material Evaluation', 'Specialized Measurement', 'Other']
+
+// Preselect the service this landing sells, so the lead arrives already
+// qualified and the visitor has one less field to fill.
+const preselected = landing.serviceValue[lang]
+
+const leadMessages = {
+  sending: t('form.sending'),
+  successNote: t('form.consent.label'),
+  errorGeneric: t('form.error'),
+  errorRequired: t('form.error.required'),
+  errorEmail: t('form.error.email'),
+  errorPhone: t('form.error.phone'),
+  errorConsent: t('form.error.consent'),
+}
+
+const leadContext = {
+  landing_id: landing.id,
+  landing_kind: landing.kind,
+  form_name: `lp-${landing.id}`,
+}
+
+const schemas = [organizationSchema(lang), landingServiceSchema(landing.id, lang)].filter(
+  (s): s is Record<string, unknown> => s !== null,
+)
+---
+
+<BaseLayout
+  title={copy.metaTitle}
+  lang={lang}
+  description={copy.metaDesc}
+  image={landing.hero.src}
+  pathByLang={landingAlternates(landing)}
+  jsonLd={schemas}
+  pageType="landing"
+  landingId={landing.id}
+  landingKind={landing.kind}
+>
+  <section class="relative bg-primary text-white overflow-hidden">
+    <div class="absolute inset-0">
+      <Image
+        src={landing.hero}
+        alt=""
+        class="w-full h-full object-cover opacity-15"
+        loading="eager"
+        decoding="async"
+        widths={[640, 1280, 1920]}
+        sizes="100vw"
+        aria-hidden="true"
+      />
+      <div class="absolute inset-0 bg-primary/70"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 grid lg:grid-cols-2 gap-12 items-start">
+      <!-- Pitch -->
+      <div>
+        <p class="text-accent text-xs font-bold uppercase tracking-widest mb-3">{copy.eyebrow}</p>
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-4">{copy.headline}</h1>
+        <p class="text-white/70 text-lg mb-8">{copy.subheadline}</p>
+
+        <ul class="space-y-4">
+          {copy.benefits.map((b) => (
+            <li class="flex gap-3">
+              <svg class="w-6 h-6 text-accent shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <div>
+                <p class="font-semibold text-white">{b.title}</p>
+                <p class="text-white/60 text-sm">{b.desc}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        {copy.standards && (
+          <div class="mt-8 pt-6 border-t border-white/10">
+            <p class="text-white/40 text-xs uppercase tracking-widest font-bold mb-2">
+              {lang === 'es' ? 'Normativa de referencia' : 'Reference standards'}
+            </p>
+            <p class="text-white/60 text-sm">{copy.standards}</p>
+          </div>
+        )}
+      </div>
+
+      <!-- Lead form card -->
+      <div class="bg-white rounded-xl shadow-2xl p-6 md:p-8">
+        <h2 class="text-xl font-bold text-primary mb-6">{copy.formTitle}</h2>
+
+        <div id="form-success" hidden class="border-l-4 border-accent bg-surface rounded p-6">
+          <h3 class="text-lg font-bold text-primary">{t('form.success.title')}</h3>
+          <p class="text-gray-700 mt-1">{t('form.success.body')}</p>
+        </div>
+
+        <form id="contact-form" class="space-y-4" novalidate>
+          <div>
+            <label for="f-name" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.name')} <span class="text-red-500" aria-hidden="true">*</span></label>
+            <input id="f-name" name="name" type="text" required autocomplete="name"
+              class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors" />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="f-email" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.email')} <span class="text-red-500" aria-hidden="true">*</span></label>
+              <input id="f-email" name="email" type="email" required autocomplete="email"
+                class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors" />
+            </div>
+            <div>
+              <label for="f-phone" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.phone')}</label>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel"
+                class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors" />
+            </div>
+          </div>
+          <div>
+            <label for="f-company" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.company')}</label>
+            <input id="f-company" name="company" type="text" autocomplete="organization"
+              class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors" />
+          </div>
+          <div>
+            <label for="f-service" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.service')}</label>
+            <select id="f-service" name="service"
+              class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors bg-white">
+              <option value="">{t('contact.form.service.placeholder')}</option>
+              {serviceOptions.map((opt) => (
+                <option value={opt} selected={opt === preselected}>{opt}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label for="f-message" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.message')}</label>
+            <textarea id="f-message" name="message" rows={3}
+              class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors resize-none"></textarea>
+          </div>
+
+          <div class="absolute left-[-9999px]" aria-hidden="true">
+            <label for="f-website">Website</label>
+            <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="flex items-start gap-2">
+            <input id="f-consent" type="checkbox" class="mt-1 accent-[#00B4D8]" />
+            <label for="f-consent" class="text-sm text-gray-600">
+              {t('form.consent.label')}
+              <a href={`/${lang}/privacy`} class="text-accent underline hover:text-primary">{t('consent.privacy')}</a>
+            </label>
+          </div>
+
+          <div id="form-status" hidden></div>
+
+          <button type="button" id="btn-submit" data-track="cta" data-track-location="landing-form"
+            class="w-full bg-accent hover:bg-accent-dark text-primary font-bold px-6 py-3 rounded text-sm transition-colors">
+            {copy.cta}
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script type="application/json" id="lead-messages" is:inline set:html={JSON.stringify(leadMessages)}></script>
+<script type="application/json" id="lead-context" is:inline set:html={JSON.stringify(leadContext)}></script>
+
+<script>
+  import { initLeadForm } from '../../../scripts/leadForm'
+
+  const messagesEl = document.getElementById('lead-messages')
+  const contextEl = document.getElementById('lead-context')
+  const messages = messagesEl?.textContent ? JSON.parse(messagesEl.textContent) : {}
+  const context = contextEl?.textContent ? JSON.parse(contextEl.textContent) : {}
+
+  initLeadForm(messages, context)
+</script>

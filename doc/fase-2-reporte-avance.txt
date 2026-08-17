@@ -1,0 +1,198 @@
+================================================================================
+KAIBELAB · REPORTE DE AVANCE
+Fase 2 — Expansión de la campaña
+Fecha: ____________          Responsable técnico: Diego
+================================================================================
+
+RESUMEN PARA EL CLIENTE
+
+Queda construida y publicada toda la base técnica de la Fase 2: cuatro páginas
+de campaña en español e inglés, el sistema completo de medición de conversiones
+con atribución de origen, y las mejoras de SEO y rendimiento previstas en el
+plan. El trabajo de código está terminado y verificado. Lo que resta para
+cerrar la fase es configuración en las cuentas de Google y HubSpot, y la entrega
+del contenido definitivo.
+
+
+--------------------------------------------------------------------------------
+1. DECISIONES CERRADAS
+--------------------------------------------------------------------------------
+
+Se resolvieron los tres puntos que bloqueaban el arranque de la fase. Quedan
+documentados en doc/fase-2-decisiones.txt.
+
+  1. Conjunto de landings: cuatro variantes, dos por oferta y dos por segmento.
+  2. Convención de etiquetas UTM: estándar de Google, minúsculas y guiones.
+  3. Fuente única de verdad de la conversión: GA4 cuenta, HubSpot registra.
+
+  La tercera decisión es la que elimina el riesgo de conteo doble de
+  conversiones señalado como riesgo medio en el plan.
+
+
+--------------------------------------------------------------------------------
+2. NUEVAS PÁGINAS DE CAMPAÑA
+--------------------------------------------------------------------------------
+
+Ocho páginas publicadas, cuatro variantes en dos idiomas:
+
+  POR OFERTA
+    /es/lp/intemperismo-acelerado/   ·  /en/lp/accelerated-weathering/
+    /es/lp/impermeabilidad-ipx8/     ·  /en/lp/ipx8-waterproofing/
+
+  POR SEGMENTO
+    /es/lp/automotriz/               ·  /en/lp/automotive/
+    /es/lp/electronica/              ·  /en/lp/electronics/
+
+  Todas se generan desde UNA sola plantilla y UN solo archivo de datos. Crear
+  una quinta landing en el futuro no requiere tocar plantillas, seguimiento ni
+  SEO: son unas diez líneas de configuración. Esto es lo que evita que las
+  páginas se desincronicen entre sí con el tiempo.
+
+  Cada landing preselecciona en el formulario el servicio que promociona, de
+  modo que el cliente potencial llega ya clasificado.
+
+  La página /campaign publicada en la Fase 1 quedó redirigida de forma
+  permanente a la landing de intemperismo, para no perder ningún enlace ya
+  entregado ni la autoridad ganada en buscadores.
+
+
+--------------------------------------------------------------------------------
+3. MEDICIÓN DE CONVERSIONES
+--------------------------------------------------------------------------------
+
+  SEGUIMIENTO DE BOTONES
+  El sitio ahora emite ocho eventos: vista de landing, clic en llamada a la
+  acción, WhatsApp, teléfono, correo, salida a sitio externo, inicio de
+  formulario y cliente potencial generado.
+
+  El seguimiento se implementó con un único detector central en lugar de
+  repetir código en cada botón. Consecuencia práctica: cualquier botón que se
+  añada en el futuro queda medido automáticamente, sin riesgo de que alguien
+  olvide instrumentarlo.
+
+  ATRIBUCIÓN DE ORIGEN
+  El sitio captura los parámetros de campaña y el identificador de clic de
+  Google Ads al entrar el visitante, y los conserva durante toda la visita. Si
+  alguien llega por un anuncio a una landing y envía el formulario tres páginas
+  después, el cliente potencial llega a HubSpot con su campaña de origen.
+
+  Es el requisito de la prueba de cierre "origen de cada cliente potencial
+  atribuido de forma correcta en HubSpot".
+
+  RESPETO AL CONSENTIMIENTO
+  Ningún evento se emite antes de que el visitante acepte el aviso de cookies.
+  Se optó por descartar los eventos previos en lugar de acumularlos, porque
+  Google Tag Manager reproduce todo lo acumulado al cargarse, lo que habría
+  enviado a GA4 actividad anterior al consentimiento.
+
+  PROTECCIÓN CONTRA CONTEO DOBLE
+  El evento de conversión se dispara una sola vez y únicamente después de que
+  HubSpot confirma la recepción: nunca al hacer clic y nunca si el envío falla.
+  El botón se bloquea durante el envío para que un doble clic no genere dos
+  contactos ni dos conversiones.
+
+
+--------------------------------------------------------------------------------
+4. SEO
+--------------------------------------------------------------------------------
+
+  · Datos estructurados de organización, sitio web y servicios en formato
+    JSON-LD, con los datos reales ya publicados en el sitio.
+  · Título, descripción y vista previa social propios para cada página. Antes
+    todas las páginas compartían una sola descripción genérica.
+  · Etiquetas canónicas y de idioma correctas en las ocho landings nuevas.
+  · Mapa del sitio actualizado, excluyendo páginas legales y redirecciones.
+
+  NOTA TÉCNICA
+  Las landings usan una dirección distinta en cada idioma (automotriz /
+  automotive). Se implementó de forma que la etiqueta de idioma apunte a la
+  dirección correcta en cada caso. Resuelto de la manera habitual, la versión
+  en inglés habría apuntado a una dirección inexistente y el enlace entre
+  idiomas se habría roto sin dar ningún aviso.
+
+
+--------------------------------------------------------------------------------
+5. RENDIMIENTO
+--------------------------------------------------------------------------------
+
+  · Las tipografías dejaron de bloquear el primer pintado de la página. El
+    texto aparece de inmediato en lugar de esperar a la descarga de la fuente.
+  · Las imágenes de las landings se sirven en formato WebP y en varios tamaños
+    según el dispositivo.
+
+  Pendiente: la medición comparativa antes/después con datos reales, que forma
+  parte de las pruebas de cierre.
+
+
+--------------------------------------------------------------------------------
+6. INCIDENCIA DETECTADA Y RESUELTA
+--------------------------------------------------------------------------------
+
+  Durante la verificación se detectó que HubSpot rechaza el envío completo de
+  un formulario cuando recibe un campo que no existe en su configuración. Como
+  las propiedades de atribución todavía no están creadas en el portal, el envío
+  de los nuevos datos habría provocado que TODAS las solicitudes de cotización
+  fallaran en producción.
+
+  Se resolvió antes de publicar: si HubSpot rechaza el envío, el sitio reintenta
+  automáticamente con los datos básicos. El cliente potencial se captura
+  siempre, y la atribución empieza a llegar en cuanto se creen las propiedades,
+  sin necesidad de volver a tocar el código.
+
+
+--------------------------------------------------------------------------------
+7. VERIFICACIÓN REALIZADA
+--------------------------------------------------------------------------------
+
+  Revisión de tipos                          0 errores
+  Compilación del sitio                      24 páginas generadas
+  Pruebas de la lógica de medición           31 de 31 superadas
+  Datos estructurados                        26 bloques, todos válidos
+  Etiquetas de idioma entre idiomas          correctas en ambos sentidos
+  Imágenes de vista previa social            4 de 4 resuelven correctamente
+  Descripciones únicas por página            10 de 10
+  Indexación                                 correcta en todas las páginas
+
+  Las pruebas cubren la captura de campaña, su conservación al navegar, el
+  reemplazo por una campaña nueva, el bloqueo de eventos sin consentimiento y
+  la clasificación correcta de cada tipo de botón.
+
+
+--------------------------------------------------------------------------------
+8. DOCUMENTACIÓN ENTREGADA
+--------------------------------------------------------------------------------
+
+  doc/fase-2-todo.txt                     Lista completa de tareas de la fase
+  doc/fase-2-decisiones.txt               Registro de las tres decisiones
+  doc/fase-2-configuracion-gtm-hubspot.txt Instrucciones de configuración
+  doc/fase-2-reporte-avance.txt           Este reporte
+
+
+--------------------------------------------------------------------------------
+9. LO QUE SIGUE
+--------------------------------------------------------------------------------
+
+  REQUIERE ACCESO A LAS CUENTAS
+  [ ] Crear las propiedades de contacto en HubSpot (nombres exactos en el
+      documento de configuración, sección 1).
+  [ ] Configurar y publicar las etiquetas en Google Tag Manager (sección 3).
+  [ ] Marcar la conversión como evento clave en GA4 y crear las dimensiones
+      personalizadas (sección 4).
+
+  REQUIERE MATERIAL DEL CLIENTE
+  [ ] Contenido definitivo aprobado en ambos idiomas. El texto actual es
+      provisional, redactado a partir de la información técnica ya publicada
+      en el sitio.
+  [ ] Dirección completa y perfiles sociales para los datos estructurados.
+  [ ] Imágenes de vista previa social por landing. Las fotografías de equipo
+      disponibles miden 622 píxeles de ancho, por debajo del estándar de 1200
+      recomendado para redes sociales.
+
+  PRUEBAS DE CIERRE PENDIENTES
+  [ ] Validación de eventos en DebugView, en español e inglés.
+  [ ] Envío de prueba real comprobando la atribución en HubSpot.
+  [ ] Prueba de resultados enriquecidos sobre los datos estructurados.
+  [ ] Medición comparativa de rendimiento.
+  [ ] Revisión de ortografía y coherencia entre idiomas.
+
+================================================================================

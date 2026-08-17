@@ -21,7 +21,7 @@ const sectors = [
 ] as const
 ---
 
-<BaseLayout title={t('sectors.page.title')} lang={lang}>
+<BaseLayout title={t('sectors.page.title')} lang={lang} description={t('meta.sectors.desc')} pageType="sectors">
 
   <!-- Page hero -->
   <section class="relative bg-primary text-white py-14 md:py-20 overflow-hidden">
@@ -71,7 +71,7 @@ const sectors = [
           ? 'Si su organización requiere ensayos de materiales con respaldo normativo internacional, KAIBELAB tiene la capacidad y el rigor técnico para responder.'
           : 'If your organization requires material testing backed by international standards, KAIBELAB has the capacity and technical rigor to deliver.'}
       </p>
-      <a href={`/${lang}/contact`}
+      <a href={`/${lang}/contact`} data-track="cta" data-track-location="sectors-final"
         class="bg-accent hover:bg-accent-dark text-white font-semibold px-8 py-3 rounded text-sm transition-colors">
         {t('nav.cta')}
       </a>

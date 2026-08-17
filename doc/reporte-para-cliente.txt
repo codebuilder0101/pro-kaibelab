@@ -1,0 +1,108 @@
+REPORTE DE AVANCE
+Fase 2, expansión de la campaña
+
+
+Hola Juan, te comparto lo que quedó terminado hoy.
+
+Terminé toda la parte de desarrollo de la segunda fase. El sitio ya está
+publicado con los cambios. Abajo va el detalle y las capturas.
+
+
+NUEVAS PÁGINAS DE CAMPAÑA
+
+Quedaron listas ocho páginas, cuatro variantes en español y esas mismas cuatro
+en inglés.
+
+  Intemperismo acelerado
+  Impermeabilidad IPX8
+  Sector automotriz
+  Sector eléctrico y electrónico
+
+Las cuatro se generan desde una sola plantilla. Eso quiere decir que si más
+adelante quieres una quinta landing para otra campaña, ya no hay que maquetar
+nada ni volver a instrumentar la medición. Se agrega la información y la página
+sale sola en los dos idiomas.
+
+Cada landing además preselecciona en el formulario el servicio que promociona,
+así el prospecto llega ya clasificado y con un campo menos que llenar.
+
+Puedes verlas en las capturas 01 a 08.
+
+
+MEDICIÓN DE CONVERSIONES
+
+El sitio ahora registra ocho eventos distintos. Vista de landing, clic en
+llamada a la acción, WhatsApp, teléfono, correo, salida hacia un sitio externo,
+inicio de formulario y prospecto generado.
+
+También quedó captando la campaña de origen en cuanto entra el visitante, y la
+conserva durante toda la visita. Si alguien llega por un anuncio a una landing
+y termina enviando el formulario tres páginas después, el prospecto llega a
+HubSpot con la campaña que lo trajo. Eso es justo lo que pedía la prueba de
+cierre de esta fase.
+
+Ningún evento se emite antes de que el visitante acepte el aviso de cookies.
+
+
+SEO
+
+Agregué los datos estructurados de organización y de servicios, que son los que
+usan los buscadores para entender a qué se dedica el laboratorio.
+
+Cada página tiene ahora su propio título, su propia descripción y su propia
+vista previa para redes sociales. Antes todas compartían una sola descripción
+genérica, así que en buscadores competían entre ellas.
+
+
+RENDIMIENTO
+
+Las tipografías ya no bloquean el primer pintado de la página, así que el texto
+aparece de inmediato en lugar de esperar a que descargue la fuente.
+
+Las imágenes de las landings se sirven en formato moderno y en varios tamaños
+según el dispositivo. En la captura 09 se ve cómo queda en celular.
+
+
+UN PROBLEMA QUE ALCANCÉ A DETECTAR ANTES DE PUBLICAR
+
+Revisando encontré que HubSpot rechaza el formulario completo cuando recibe un
+campo que todavía no existe en su configuración. Como las propiedades de
+atribución aún no están creadas en el portal, esto habría provocado que todas
+las solicitudes de cotización fallaran en el sitio, sin aviso.
+
+Quedó resuelto antes de salir a producción. Si HubSpot rechaza el envío, el
+sitio reintenta automáticamente con los datos básicos. El prospecto se captura
+siempre, y la atribución empieza a llegar en cuanto creemos las propiedades,
+sin volver a tocar el código.
+
+
+LO QUE SIGUE
+
+Del lado de las cuentas falta crear las propiedades en HubSpot, publicar las
+etiquetas en Google Tag Manager y marcar la conversión en GA4. Ya dejé un
+documento con los nombres exactos para que no haya margen de error al
+configurarlo.
+
+Del lado de contenido hace falta el material definitivo aprobado en los dos
+idiomas. El texto que está ahora es provisional y lo redacté a partir de la
+información técnica que ya estaba publicada en el sitio.
+
+También convendría tener imágenes propias para la vista previa en redes
+sociales. Las fotos de equipo que tenemos miden 622 píxeles de ancho y lo
+recomendado son 1200.
+
+Quedo pendiente de los accesos para cerrar las pruebas finales.
+
+
+CAPTURAS
+
+  01   Landing de intemperismo acelerado en español
+  02   Landing de impermeabilidad IPX8 en español
+  03   Landing del sector automotriz en español
+  04   Landing del sector eléctrico y electrónico en español
+  05   Landing de intemperismo acelerado en inglés
+  06   Landing de impermeabilidad IPX8 en inglés
+  07   Landing del sector automotriz en inglés
+  08   Landing del sector eléctrico y electrónico en inglés
+  09   Vista en celular
+  10   Página de inicio

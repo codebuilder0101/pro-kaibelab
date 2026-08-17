@@ -52,7 +52,7 @@ const groups = [
 ]
 ---
 
-<BaseLayout title={t('standards.page.title')} lang={lang}>
+<BaseLayout title={t('standards.page.title')} lang={lang} description={t('meta.standards.desc')} pageType="standards">
 
   <section class="relative bg-primary text-white py-14 md:py-20 overflow-hidden">
     <div class="absolute inset-0">
@@ -120,7 +120,7 @@ const groups = [
           ? 'Trabajamos conforme a los requerimientos normativos de cada cliente y proyecto.'
           : "We work according to each client's regulatory requirements."}
       </p>
-      <a href={`/${lang}/contact`}
+      <a href={`/${lang}/contact`} data-track="cta" data-track-location="standards-final"
         class="bg-primary hover:bg-primary/90 text-white font-semibold px-8 py-3 rounded text-sm transition-colors">
         {t('nav.cta')}
       </a>

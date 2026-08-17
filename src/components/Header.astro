@@ -50,7 +50,7 @@ const navLinks = [
           class="text-xs font-bold uppercase border border-white/30 rounded px-2 py-1 hover:bg-white/10 transition-colors">
           {otherLang.toUpperCase()}
         </a>
-        <a href={`/${lang}/contact`}
+        <a href={`/${lang}/contact`} data-track="cta" data-track-location="header"
           class="hidden sm:block bg-accent hover:bg-accent-dark text-white text-sm font-semibold px-4 py-2 rounded transition-colors whitespace-nowrap">
           {t('nav.cta')}
         </a>
@@ -69,7 +69,7 @@ const navLinks = [
             {t(key)}
           </a>
         ))}
-        <a href={`/${lang}/contact`}
+        <a href={`/${lang}/contact`} data-track="cta" data-track-location="header-mobile"
           class="mt-2 bg-accent hover:bg-accent-dark text-white text-sm font-semibold px-4 py-2 rounded text-center transition-colors">
           {t('nav.cta')}
         </a>

@@ -1,0 +1,150 @@
+---
+/**
+ * Consent Mode v2 + Google Tag Manager loader.
+ *
+ * - Sets consent defaults to DENIED before anything tracks.
+ * - Shows a cookie banner (es/en). GTM (and any GA4 / Clarity / HubSpot tags
+ *   configured inside it) loads ONLY after the visitor accepts.
+ * - Remembers the choice in localStorage; returning visitors see no banner.
+ * - If GTM_ID is empty (placeholder), the whole thing stays inert — the site
+ *   builds and runs with nothing tracking.
+ */
+import { GTM_ID } from '../config/site'
+import { useTranslations } from '../i18n/utils'
+import type { Lang } from '../i18n/ui'
+
+const { lang } = Astro.props as { lang: Lang }
+const t = useTranslations(lang)
+---
+
+{GTM_ID && (
+  <>
+    <!-- Consent defaults + gated GTM loader (runs before any tag) -->
+    <script is:inline define:vars={{ GTM_ID }}>
+      (function () {
+        var KEY = 'kb_consent'
+        window.dataLayer = window.dataLayer || []
+        function gtag() { dataLayer.push(arguments) }
+        window.gtag = window.gtag || gtag
+
+        // Consent Mode v2 — everything denied until the visitor accepts.
+        gtag('consent', 'default', {
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+          analytics_storage: 'denied',
+          functionality_storage: 'denied',
+          personalization_storage: 'denied',
+          security_storage: 'granted',
+          wait_for_update: 500,
+        })
+
+        var loaded = false
+        function loadGTM() {
+          if (loaded || !GTM_ID) return
+          loaded = true
+          ;(function (w, d, s, l, i) {
+            w[l] = w[l] || []
+            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
+            var f = d.getElementsByTagName(s)[0]
+            var j = d.createElement(s)
+            var dl = l != 'dataLayer' ? '&l=' + l : ''
+            j.async = true
+            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl
+            f.parentNode.insertBefore(j, f)
+          })(window, document, 'script', 'dataLayer', GTM_ID)
+        }
+
+        function grant() {
+          gtag('consent', 'update', {
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted',
+            analytics_storage: 'granted',
+            functionality_storage: 'granted',
+            personalization_storage: 'granted',
+          })
+          loadGTM()
+        }
+
+        function hideBanner() {
+          var b = document.getElementById('cookie-consent')
+          if (b) b.hidden = true
+        }
+
+        var saved = null
+        try { saved = localStorage.getItem(KEY) } catch (e) {}
+        if (saved === 'granted') { grant(); hideBanner() }
+        else if (saved === 'denied') { hideBanner() }
+        else {
+          document.addEventListener('DOMContentLoaded', function () {
+            var b = document.getElementById('cookie-consent')
+            if (b) b.hidden = false
+          })
+        }
+
+        document.addEventListener('click', function (e) {
+          var el = e.target
+          if (!el || !el.id) return
+          if (el.id === 'consent-accept') {
+            try { localStorage.setItem(KEY, 'granted') } catch (e) {}
+            grant(); hideBanner()
+            // Let tracking know it may start emitting events now. Visitors who
+            // accepted on an earlier visit are handled by the localStorage
+            // check in scripts/consent.ts, so this only covers accept-in-visit.
+            document.dispatchEvent(new CustomEvent('kb:consent-granted'))
+          } else if (el.id === 'consent-reject') {
+            try { localStorage.setItem(KEY, 'denied') } catch (e) {}
+            hideBanner()
+          }
+        })
+      })()
+    </script>
+
+    <!-- GTM fallback for no-JS -->
+    <noscript>
+      <iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+        title="gtm"
+      ></iframe>
+    </noscript>
+
+    <!-- Cookie banner (hidden until we know there is no prior choice) -->
+    <div
+      id="cookie-consent"
+      hidden
+      role="dialog"
+      aria-live="polite"
+      aria-label={t('consent.message')}
+      class="fixed inset-x-0 bottom-0 z-[60] border-t border-white/10 bg-primary/95 backdrop-blur px-4 py-4 sm:px-6"
+    >
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+        <p class="text-sm text-white/85 flex-1">
+          {t('consent.message')}
+          <a href={`/${lang}/privacy`} class="underline text-accent hover:text-white ml-1">
+            {t('consent.privacy')}
+          </a>
+        </p>
+        <div class="flex gap-3 shrink-0">
+          <button
+            id="consent-reject"
+            type="button"
+            class="px-4 py-2 rounded text-sm font-semibold border border-white/30 text-white hover:bg-white/10 transition-colors"
+          >
+            {t('consent.reject')}
+          </button>
+          <button
+            id="consent-accept"
+            type="button"
+            class="px-4 py-2 rounded text-sm font-semibold bg-accent text-primary hover:bg-accent-dark transition-colors"
+          >
+            {t('consent.accept')}
+          </button>
+        </div>
+      </div>
+    </div>
+  </>
+)}

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Draft/legal pages are marked noindex at the page level.
+
+Sitemap: https://kaibelab.com/sitemap-index.xml

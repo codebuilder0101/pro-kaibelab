@@ -1,7 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import { Image } from 'astro:assets'
+import xenonChamber from '../../assets/xenon-chamber.jpg'
 import { useTranslations } from '../../i18n/utils'
 import type { Lang } from '../../i18n/ui'
+import { organizationSchema, websiteSchema } from '../../config/organization'
 
 export function getStaticPaths() {
   return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }]
@@ -18,7 +21,13 @@ const services = [
 const industries = ['automotive','plastics','coatings','electrical','labels','components','rnd'] as const
 ---
 
-<BaseLayout title={t('nav.home')} lang={lang}>
+<BaseLayout
+  title={t('nav.home')}
+  lang={lang}
+  description={t('meta.home.desc')}
+  pageType="home"
+  jsonLd={[organizationSchema(lang), websiteSchema(lang)]}
+>
 
   <!-- Hero -->
   <section class="relative bg-primary text-white overflow-hidden min-h-[500px] md:min-h-[620px]">
@@ -28,10 +37,11 @@ const industries = ['automotive','plastics','coatings','electrical','labels','co
     <!-- Hero image — all screen sizes with per-breakpoint gradient treatment -->
     <!-- Mobile: full-section background | md: right 50% | lg: right 60% -->
     <div class="absolute inset-0 md:left-auto md:w-1/2 lg:w-[60%]">
-      <img
-        src="/images/xenon-chamber.jpg"
+      <Image
+        src={xenonChamber}
         alt="Xenon Weathering Chamber"
         class="w-full h-full object-cover object-center"
+        loading="eager"
         fetchpriority="high"
         decoding="async"
       />
@@ -55,11 +65,11 @@ const industries = ['automotive','plastics','coatings','electrical','labels','co
           {t('hero.subheadline')}
         </p>
         <div class="flex flex-col sm:flex-row gap-4">
-          <a href={`/${lang}/contact`}
+          <a href={`/${lang}/contact`} data-track="cta" data-track-location="home-hero-primary"
             class="bg-accent hover:bg-accent-dark text-white font-semibold px-8 py-3 rounded text-sm transition-colors text-center">
             {t('hero.cta.primary')}
           </a>
-          <a href={`/${lang}/services`}
+          <a href={`/${lang}/services`} data-track="cta" data-track-location="home-hero-secondary"
             class="border border-white/30 hover:border-accent hover:text-accent text-white font-semibold px-8 py-3 rounded text-sm transition-colors text-center">
             {t('hero.cta.secondary')}
           </a>
@@ -111,8 +121,8 @@ const industries = ['automotive','plastics','coatings','electrical','labels','co
           </a>
         </div>
         <div class="rounded-xl overflow-hidden aspect-video bg-primary/5">
-          <img
-            src="/images/xenon-chamber.jpg"
+          <Image
+            src={xenonChamber}
             alt={t('services.xenon.title')}
             class="w-full h-full object-cover"
             loading="lazy"
@@ -151,7 +161,7 @@ const industries = ['automotive','plastics','coatings','electrical','labels','co
       </div>
       <h2 class="text-3xl font-bold mb-4">{t('founder.title')}</h2>
       <p class="text-white/70 text-lg mb-8 leading-relaxed">{t('founder.desc')}</p>
-      <a href={`/${lang}/contact`}
+      <a href={`/${lang}/contact`} data-track="cta" data-track-location="home-founder"
         class="bg-accent hover:bg-accent-dark text-white font-semibold px-8 py-3 rounded text-sm transition-colors">
         {t('founder.cta')}
       </a>

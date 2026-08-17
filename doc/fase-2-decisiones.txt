@@ -1,0 +1,142 @@
+================================================================================
+KAIBELAB · FASE 2 — REGISTRO DE DECISIONES
+Aprobadas por el cliente antes de iniciar la implementación
+================================================================================
+
+Estas tres decisiones estaban marcadas como bloqueantes en doc/fase-2-todo.txt
+(puntos 0.1, 0.3 y 0.4). Quedan cerradas y son la referencia para todo el
+trabajo de la fase. Cualquier cambio posterior obliga a revisar las landings,
+el seguimiento y las propiedades de HubSpot.
+
+
+--------------------------------------------------------------------------------
+DECISIÓN 1 · CONJUNTO DE LANDINGS (punto 0.4)
+--------------------------------------------------------------------------------
+
+APROBADO: cuatro variantes — dos por oferta y dos por segmento.
+
+  POR OFERTA
+    intemperismo-acelerado   /es/lp/intemperismo-acelerado/
+                             /en/lp/accelerated-weathering/
+    impermeabilidad-ipx8     /es/lp/impermeabilidad-ipx8/
+                             /en/lp/ipx8-waterproofing/
+
+  POR SEGMENTO
+    automotriz               /es/lp/automotriz/
+                             /en/lp/automotive/
+    electronica              /es/lp/electronica/
+                             /en/lp/electronics/
+
+  Total: 4 variantes × 2 idiomas = 8 páginas.
+
+MOTIVO
+  Son las cuatro únicas donde el sitio ya tiene contenido técnico real y
+  normativa citada en ambos idiomas, así que la brecha de contenido es la
+  mínima posible y la fase puede cerrarse. Automotriz y Electrónica son además
+  los dos sectores que conectan de forma directa con las dos ofertas.
+
+IMPLEMENTACIÓN
+  Todas se generan desde UNA sola plantilla y UN solo archivo de datos
+  (src/config/landings.ts). Añadir una quinta variante en el futuro son unas
+  diez líneas en ese archivo, sin tocar plantillas ni seguimiento.
+
+  La ruta anterior /[idioma]/campaign queda redirigida de forma permanente a
+  la landing de intemperismo, para no romper lo ya publicado.
+
+
+--------------------------------------------------------------------------------
+DECISIÓN 2 · CONVENCIÓN DE ETIQUETAS UTM (punto 0.1)
+--------------------------------------------------------------------------------
+
+APROBADO: convención estándar de Google, en minúsculas y con guiones.
+
+  PARÁMETRO       SIGNIFICADO                EJEMPLOS PERMITIDOS
+  utm_source      De dónde viene             google · bing · linkedin
+                                             newsletter · whatsapp
+  utm_medium      Cómo llega                 cpc · organic · email
+                                             social · referral · qr
+  utm_campaign    Qué campaña                oferta-año-trimestre
+                                             ej. intemperismo-2026-q3
+  utm_content     Qué variante de landing    lp-automotriz · lp-electronica
+                                             lp-intemperismo · lp-ipx8
+  utm_term        Palabra clave              solo en búsqueda de pago
+
+  EJEMPLO COMPLETO
+    https://kaibelab.com/es/lp/automotriz/?utm_source=google&utm_medium=cpc
+    &utm_campaign=intemperismo-2026-q3&utm_content=lp-automotriz
+    &utm_term=ensayo-intemperismo
+
+REGLAS OBLIGATORIAS
+  1. Todo en minúsculas. GA4 distingue mayúsculas: "Google" y "google" se
+     reportan como dos fuentes distintas. Es la causa más común de informes
+     de campaña partidos por la mitad.
+  2. Separador: guión medio. Nunca espacios, nunca guión bajo, nunca acentos
+     ni eñes.
+  3. utm_content identifica SIEMPRE la variante de landing. Es lo que permite
+     comparar el rendimiento entre variantes, que es el objetivo de la fase.
+  4. utm_campaign usa el patrón oferta-año-trimestre para que los informes
+     queden ordenados por periodo.
+
+MOTIVO
+  Es la convención que GA4 y Google Ads entienden de forma nativa, así que no
+  hay que remapear nada en la Fase 3 cuando entren las campañas de pago.
+
+
+--------------------------------------------------------------------------------
+DECISIÓN 3 · FUENTE ÚNICA DE VERDAD DE LA CONVERSIÓN (punto 0.3)
+--------------------------------------------------------------------------------
+
+APROBADO: GA4 es la fuente única de verdad. HubSpot es el registro del cliente
+potencial, no el contador.
+
+  GA4        Cuenta la conversión.
+             El sitio dispara UN evento generate_lead a través de GTM.
+             Ese evento se marca como evento clave en GA4.
+             Es el que se importará a Google Ads en la Fase 3.
+
+  HUBSPOT    Guarda el cliente potencial con su atribución completa.
+             Alimenta los flujos de CRM de la Fase 3.
+             NO cuenta conversiones y NO se sincroniza hacia Google Ads.
+
+MOTIVO
+  Google Ads importa un evento clave de GA4 de forma directa. Una conversión
+  originada en HubSpot necesitaría una sincronización adicional, que es un
+  punto de fallo extra y el lugar habitual donde aparece el conteo doble
+  señalado como riesgo medio en el plan (pág. 10).
+
+REGLA DERIVADA
+  El evento generate_lead se dispara UNA sola vez, y solo después de que la
+  API de HubSpot confirma la recepción. Nunca se dispara al hacer clic ni si
+  el envío falla.
+
+
+--------------------------------------------------------------------------------
+QUÉ SIGUE SIENDO NECESARIO DEL CLIENTE
+--------------------------------------------------------------------------------
+
+Estas decisiones desbloquean toda la construcción, pero la fase no cierra sin:
+
+  [ ] Propiedades de contacto creadas en HubSpot (punto 0.2):
+      utm_source, utm_medium, utm_campaign, utm_content, utm_term, gclid,
+      página de aterrizaje y variante de landing.
+
+  [ ] Acceso para publicar el contenedor de Google Tag Manager, o la persona
+      que lo publique.
+
+  [ ] Contenido definitivo aprobado en ambos idiomas. El contenido cargado
+      ahora es provisional y está redactado a partir de la información técnica
+      ya publicada en el sitio.
+
+  [ ] Datos reales de la organización para los datos estructurados: razón
+      social, dirección completa, teléfono, correo y perfiles sociales.
+
+  [ ] Imágenes de vista previa social por landing, o aprobación para generarlas
+      a partir de los recursos de marca existentes.
+
+  [ ] Acceso a GA4 y a Search Console para marcar eventos clave, validar en
+      DebugView y reenviar el mapa del sitio.
+
+  [ ] Confirmación de cómo funciona el entorno de pruebas: hoy deploy.sh
+      construye directo sobre el directorio que sirve nginx en producción.
+
+================================================================================

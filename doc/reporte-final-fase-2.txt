@@ -1,0 +1,194 @@
+REPORTE FINAL
+Fase 2, expansión de la campaña
+
+
+Hola Juan, te comparto el cierre de la segunda fase. Lo dividí en diez pasos
+para que puedas seguir el trabajo en orden. Cada paso lleva su captura.
+
+
+PASO 1. ESTRUCTURA DE LA CAMPAÑA
+
+Quedaron definidas cuatro landings, dos por oferta y dos por segmento. Las
+cuatro se generan desde una sola plantilla y un solo archivo de configuración.
+
+Esto importa más de lo que parece. El día que quieras una quinta landing para
+otra campaña no hay que maquetar nada nuevo. Se agrega la información del
+servicio y la página se publica sola en los dos idiomas, ya con su medición y
+su SEO puestos. Es lo que evita que con el tiempo unas páginas queden medidas
+y otras no.
+
+Captura 01.
+
+
+PASO 2. LANDING DE INTEMPERISMO ACELERADO
+
+Es la oferta principal del laboratorio y quedó como landing de campaña.
+
+Lleva encabezado, tres beneficios y la normativa de referencia visible desde el
+primer momento, con ASTM G155, ISO 4892 parte 2 y SAE J2527 entre otras. El
+formulario está a la derecha, sin scroll de por medio, para que el visitante
+que llega de un anuncio pueda cotizar de inmediato.
+
+Captura 02.
+
+
+PASO 3. LANDING DE IMPERMEABILIDAD IPX8
+
+La segunda oferta, orientada a ensayos de inmersión conforme a IEC 60529 e
+ISO 20653.
+
+Va dirigida a fabricantes de componentes electrónicos, luminarias, conectores
+y gabinetes eléctricos, que es donde este ensayo se pide con requisito formal.
+
+Captura 03.
+
+
+PASO 4. LANDING DEL SECTOR AUTOMOTRIZ
+
+Primera landing por segmento. Aquí el mensaje ya no habla de un ensayo sino de
+la necesidad del proveedor automotriz.
+
+Menciona validación conforme a estándares OEM y de cadena de suministro Tier 1
+a Tier 4, y agrupa en un solo lugar intemperismo, ciclos térmicos e
+impermeabilidad. Un proveedor que busca laboratorio quiere saber si le
+resuelves todo, no un ensayo suelto.
+
+Captura 04.
+
+
+PASO 5. LANDING DEL SECTOR ELÉCTRICO Y ELECTRÓNICO
+
+Segunda landing por segmento, con el mismo criterio.
+
+Habla de validación ambiental completa, impermeabilidad, ciclos térmicos y
+durabilidad de materiales expuestos, para quien fabrica componentes y necesita
+respaldar el grado de protección que declara.
+
+Captura 05.
+
+
+PASO 6. VERSIONES EN INGLÉS
+
+Las cuatro landings existen también en inglés, cada una con su propia dirección
+en el idioma correspondiente.
+
+Aquí hubo un detalle técnico que quiero señalarte. Como la dirección cambia
+entre idiomas, por ejemplo automotriz y automotive, la etiqueta que le dice al
+buscador dónde está la otra versión tenía que apuntar a la dirección correcta
+en cada caso. Resuelto de la manera común, la versión en inglés habría apuntado
+a una página inexistente y el vínculo entre idiomas se habría roto sin dar
+ningún aviso. Quedó implementado de forma que apunta bien en ambos sentidos.
+
+Captura 06.
+
+
+PASO 7. FORMULARIO CONECTADO A HUBSPOT
+
+Todos los formularios del sitio, los de las landings y el de la página de
+contacto, envían directo a HubSpot.
+
+Cada landing preselecciona el servicio que promociona, así el prospecto llega
+ya clasificado y con un campo menos que llenar. El formulario valida los datos
+antes de enviar, tiene protección contra robots y el botón se bloquea durante
+el envío para que un doble clic no genere dos contactos.
+
+Captura 07.
+
+
+PASO 8. MEDICIÓN DE CONVERSIONES Y CONSENTIMIENTO
+
+El sitio ahora registra ocho eventos distintos. Vista de landing, clic en
+llamada a la acción, WhatsApp, teléfono, correo, salida hacia un sitio externo,
+inicio de formulario y prospecto generado.
+
+También quedó captando la campaña de origen en cuanto entra el visitante y la
+conserva durante toda la visita. Si alguien llega por un anuncio a una landing
+y termina enviando el formulario tres páginas después, el prospecto llega a
+HubSpot con la campaña que lo trajo. Eso es justo lo que pedía la prueba de
+cierre de esta fase.
+
+Ningún evento se emite antes de que el visitante acepte el aviso de cookies. Lo
+resolvimos descartando los eventos previos en lugar de guardarlos, porque
+Google Tag Manager reproduce todo lo acumulado en cuanto carga, y eso habría
+mandado a Google Analytics actividad anterior al consentimiento.
+
+Captura 08, donde se ve el aviso de cookies en la versión móvil.
+
+
+PASO 9. SEO Y DATOS ESTRUCTURADOS
+
+Cada página tiene ahora su propio título, su propia descripción y su propia
+vista previa para redes sociales. Antes todas compartían una sola descripción
+genérica y competían entre ellas en buscadores.
+
+Se agregaron además los datos estructurados de organización y de servicios, que
+son los que usan los buscadores para entender a qué se dedica el laboratorio y
+qué servicios ofrece. En la captura puedes ver los valores reales tomados del
+sitio ya publicado.
+
+Los datos de dirección exacta y perfiles sociales quedaron deliberadamente
+fuera por ahora. Preferí dejarlos vacíos antes que inventarlos, porque esa
+información se muestra a los usuarios en los resultados de búsqueda.
+
+Captura 09.
+
+
+PASO 10. URL ANTERIOR CONSERVADA Y RENDIMIENTO
+
+La página de campaña que publicamos en la primera fase quedó redirigida de
+forma permanente a la nueva landing de intemperismo. Ningún enlace que ya hayas
+entregado se rompe, y la autoridad ganada en buscadores pasa a la nueva
+dirección. En la captura se ve cómo la dirección vieja aterriza en la página
+nueva.
+
+Del lado de rendimiento, las tipografías ya no bloquean el primer pintado de la
+página y las imágenes de las landings se sirven en formato moderno y en varios
+tamaños según el dispositivo. La medición comparativa formal queda pendiente
+porque necesito los accesos para levantarla.
+
+Captura 10.
+
+
+UN PROBLEMA QUE ALCANCÉ A DETECTAR ANTES DE PUBLICAR
+
+Revisando encontré que HubSpot rechaza el formulario completo cuando recibe un
+campo que todavía no existe en su configuración. Como las propiedades de
+atribución aún no están creadas en el portal, esto habría provocado que todas
+las solicitudes de cotización fallaran en el sitio, sin ningún aviso.
+
+Quedó resuelto antes de salir a producción. Si HubSpot rechaza el envío, el
+sitio reintenta automáticamente con los datos básicos. El prospecto se captura
+siempre, y la atribución empieza a llegar en cuanto creemos las propiedades,
+sin volver a tocar el código.
+
+
+LO QUE FALTA PARA CERRAR LA FASE
+
+Del lado de las cuentas necesito crear las propiedades en HubSpot, publicar las
+etiquetas en Google Tag Manager y marcar la conversión en Google Analytics. Ya
+dejé documentado el nombre exacto de cada campo y de cada evento para que la
+configuración no tenga margen de error.
+
+Del lado de contenido hace falta el material definitivo aprobado en los dos
+idiomas. El texto que está publicado es provisional y lo redacté a partir de la
+información técnica que ya teníamos en el sitio.
+
+También convendría tener imágenes propias para la vista previa en redes
+sociales. Las fotos de equipo que tenemos miden 622 píxeles de ancho y lo
+recomendado son 1200.
+
+Quedo al pendiente de los accesos para levantar las pruebas finales.
+
+
+LISTA DE CAPTURAS
+
+  01   Las cuatro landings generadas desde una sola plantilla
+  02   Landing de intemperismo acelerado
+  03   Landing de impermeabilidad IPX8
+  04   Landing del sector automotriz
+  05   Landing del sector eléctrico y electrónico
+  06   Versión en inglés
+  07   Formulario conectado a HubSpot
+  08   Aviso de cookies en versión móvil
+  09   Metadatos y datos estructurados
+  10   Dirección anterior redirigida a la nueva landing

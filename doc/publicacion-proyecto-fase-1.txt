@@ -1,0 +1,171 @@
+================================================================================
+PUBLICACIÓN DE PROYECTO
+Fase 1, base y configuración técnica de sitio web corporativo
+================================================================================
+
+
+TÍTULO SUGERIDO
+
+  Desarrollador web para base técnica de sitio corporativo bilingüe con Astro,
+  analítica con Google Tag Manager y captación de prospectos hacia HubSpot
+
+
+RESUMEN DEL PROYECTO
+
+Buscamos a una persona con perfil de ingeniería web para dejar lista la base
+técnica de un sitio corporativo bilingüe de un laboratorio de materiales y
+ensayos especializados.
+
+El sitio es estático, ligero por diseño y ya cuenta con su contenido en español
+e inglés. Lo que falta es todo lo que lo vuelve seguro, veloz y medible, además
+de la primera página de campaña conectada a HubSpot para empezar a captar
+prospectos.
+
+Este es el primero de cuatro entregables del proyecto. Las siguientes fases
+cubren expansión de campaña, automatización de marketing y crecimiento con
+inteligencia artificial. Quien haga un buen trabajo en esta fase tiene
+continuidad directa en las demás.
+
+
+ALCANCE DEL TRABAJO
+
+1. Seguridad
+
+   · Forzar HTTPS y verificar que el certificado quede siempre válido.
+   · Configurar las cabeceras de seguridad estándar en la capa de servidor.
+   · Definir una política de contenido que permita las etiquetas de Google,
+     Microsoft Clarity y HubSpot sin bloquearlas de forma silenciosa.
+
+2. Caché y rendimiento
+
+   · Cabeceras de caché sobre los recursos con huella de versión.
+   · Compresión moderna del contenido servido.
+   · Optimización de imágenes, formatos actuales y carga diferida donde
+     corresponda.
+
+3. Analítica y etiquetado
+
+   · Publicar el contenedor de Google Tag Manager y dejarlo como único centro
+     de todo el seguimiento. Nada de etiquetas escritas a mano en las
+     plantillas.
+   · Configurar Google Analytics 4 a través del contenedor, contemplando las
+     dos variantes de idioma.
+   · Instalar Microsoft Clarity y el código de seguimiento de HubSpot.
+   · Verificar el sitio en Search Console y enviar el mapa del sitio y el
+     archivo de robots.
+
+4. Consentimiento y cumplimiento legal
+
+   · Implementar el aviso de cookies con Consent Mode versión 2 de Google.
+   · Garantizar que Google Analytics, Google Tag Manager, Clarity y HubSpot
+     carguen únicamente cuando el visitante acepta.
+   · Redactar el aviso de privacidad y la política de cookies en español e
+     inglés.
+   · Incluir la casilla de consentimiento explícito en los formularios y el
+     texto de tratamiento de datos.
+
+5. Página de campaña y captación de prospectos
+
+   · Construir la plantilla de landing integrada en la estructura del sitio, en
+     español e inglés.
+   · Formulario con validación en cliente, mensajes de éxito y de error, y
+     protección básica contra envíos automatizados.
+   · Cada envío debe crear el contacto en HubSpot.
+   · Emitir el evento de conversión hacia la capa de datos una sola vez, y
+     únicamente cuando HubSpot confirme la recepción.
+
+   Sobre este punto hay una decisión técnica que se toma al inicio junto con
+   nosotros. La opción A usa el formulario integrado de HubSpot y no necesita
+   servidor. La opción B usa un punto de envío propio con más control. Queremos
+   escuchar tu recomendación con argumentos.
+
+
+PERFIL QUE BUSCAMOS
+
+Indispensable
+
+   · Experiencia comprobable con generadores de sitios estáticos. El proyecto
+     usa Astro, pero nos sirve experiencia sólida en Next, Nuxt, Eleven o
+     similares si demuestras que puedes tomar el proyecto rápido.
+   · TypeScript y buen manejo de HTML semántico y accesible.
+   · Tailwind CSS.
+   · Experiencia real configurando Google Tag Manager y Google Analytics 4, no
+     solo pegar el código de instalación.
+   · Haber trabajado con Consent Mode versión 2 y entender por qué el
+     consentimiento va antes que la medición.
+   · Configuración de servidor web, idealmente nginx, para cabeceras de
+     seguridad, caché y compresión.
+   · Sitios bilingües con etiquetas de idioma y canónicas correctas.
+
+Deseable
+
+   · Integración con la interfaz de formularios de HubSpot.
+   · Microsoft Clarity.
+   · Optimización de Core Web Vitals con evidencia de resultados anteriores.
+   · Español e inglés, ya que todo el contenido y la documentación son
+     bilingües.
+
+
+CÓMO TRABAJAMOS
+
+   · El cumplimiento legal va primero. Ninguna etiqueta se activa antes del
+     consentimiento.
+   · Todo el seguimiento vive en Google Tag Manager, de forma centralizada.
+   · Ninguna fase se da por cerrada sin que sus pruebas queden superadas.
+   · Se prueba antes de publicar, en un entorno separado de producción, con
+     noindex e identificadores de prueba.
+
+
+CRITERIOS DE ACEPTACIÓN
+
+La fase se considera entregada cuando estas pruebas quedan superadas y
+documentadas.
+
+   · Cabeceras de seguridad correctas y política de contenido que no bloquea
+     ninguna etiqueta, comprobado con herramientas públicas de análisis.
+   · Buena puntuación de rendimiento y tiempos de carga en móvil y escritorio,
+     medido con Lighthouse.
+   · Vistas y eventos visibles en español e inglés, comprobado con la vista
+     previa de Google Tag Manager y con DebugView.
+   · Nada carga antes de aceptar el aviso de cookies y todo carga al aceptar,
+     comprobado en el panel de red del navegador.
+   · Un envío de prueba real llega como contacto a HubSpot y la conversión se
+     cuenta una sola vez.
+   · Revisión manual en varios navegadores, en móvil, en los dos idiomas y en
+     la página de error 404.
+
+
+ENTREGABLES
+
+   · Código fuente en el repositorio, con historial de cambios claro.
+   · Configuración de servidor documentada.
+   · Contenedor de Google Tag Manager publicado, con el número de versión
+     anotado.
+   · Aviso de privacidad y política de cookies en los dos idiomas.
+   · Documento breve con los identificadores usados, las decisiones tomadas y
+     el resultado de cada prueba.
+
+
+INFORMACIÓN DEL PROYECTO
+
+   · Idiomas del sitio, español e inglés.
+   · Comunicación en español.
+   · Accesos a Google, HubSpot, dominio y hosting los proporcionamos nosotros.
+   · Trabajo remoto, con puntos de control por avance.
+   · Existe documento de planificación completo que se comparte al iniciar.
+
+
+CÓMO POSTULARTE
+
+Para filtrar rápido, en tu propuesta responde estas tres cosas de forma breve.
+
+   1. Cuéntanos un sitio donde hayas configurado Google Tag Manager con
+      consentimiento previo y qué problema te encontraste al hacerlo.
+   2. Entre el formulario integrado de HubSpot y un punto de envío propio, cuál
+      recomendarías para un sitio estático y por qué.
+   3. Tu estimación de tiempo para esta fase y tu disponibilidad semanal.
+
+Las propuestas genéricas no las consideramos. Preferimos respuestas cortas y
+concretas antes que un catálogo de servicios.
+
+================================================================================

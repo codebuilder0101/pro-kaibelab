@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import { useTranslations } from '../../i18n/utils'
 import type { Lang } from '../../i18n/ui'
+import { organizationSchema } from '../../config/organization'
 
 export function getStaticPaths() {
   return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }]
@@ -16,9 +17,25 @@ const EMAIL = 'contacto@kaibelab.com'
 const serviceOptions = lang === 'es'
   ? ['Intemperismo Acelerado','Colorimetría y Brillo','Espectroscopía','Evaluación de Materiales','Medición Especializada','Soporte Técnico Especializado','Otro']
   : ['Accelerated Weathering','Colorimetry & Gloss','Spectroscopy','Material Evaluation','Specialized Measurement','Specialized Technical Support','Other']
+
+const leadMessages = {
+  sending: t('form.sending'),
+  successNote: t('form.consent.label'),
+  errorGeneric: t('form.error'),
+  errorRequired: t('form.error.required'),
+  errorEmail: t('form.error.email'),
+  errorPhone: t('form.error.phone'),
+  errorConsent: t('form.error.consent'),
+}
 ---
 
-<BaseLayout title={t('contact.page.title')} lang={lang}>
+<BaseLayout
+  title={t('contact.page.title')}
+  lang={lang}
+  description={t('meta.contact.desc')}
+  pageType="contact"
+  jsonLd={[organizationSchema(lang)]}
+>
 
   <section class="relative bg-primary text-white py-14 md:py-20 overflow-hidden">
     <div class="absolute inset-0">
@@ -58,51 +75,86 @@ const serviceOptions = lang === 'es'
           {lang === 'es' ? 'Formulario de cotización' : 'Quote Request Form'}
         </h2>
 
+        <!-- Success message (revealed after a successful HubSpot submission) -->
+        <div id="form-success" hidden class="border-l-4 border-accent bg-surface rounded p-6">
+          <h3 class="text-lg font-bold text-primary">{t('form.success.title')}</h3>
+          <p class="text-gray-700 mt-1">{t('form.success.body')}</p>
+        </div>
+
         <form id="contact-form" class="space-y-6" novalidate>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.name')}</label>
-              <input id="f-name" type="text"
+              <label for="f-name" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.name')} <span class="text-red-500" aria-hidden="true">*</span></label>
+              <input id="f-name" name="name" type="text" required autocomplete="name"
                 class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.company')}</label>
-              <input id="f-company" type="text"
+              <label for="f-company" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.company')}</label>
+              <input id="f-company" name="company" type="text" autocomplete="organization"
                 class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors" />
             </div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.email')}</label>
-              <input id="f-email" type="email"
+              <label for="f-email" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.email')} <span class="text-red-500" aria-hidden="true">*</span></label>
+              <input id="f-email" name="email" type="email" required autocomplete="email"
                 class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.phone')}</label>
-              <input id="f-phone" type="tel"
+              <label for="f-phone" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.phone')}</label>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel"
                 class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors" />
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.service')}</label>
-            <select id="f-service"
+            <label for="f-service" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.service')}</label>
+            <select id="f-service" name="service"
               class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors bg-white">
               <option value="">{t('contact.form.service.placeholder')}</option>
               {serviceOptions.map((opt) => <option value={opt}>{opt}</option>)}
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.message')}</label>
-            <textarea id="f-message" rows={5}
+            <label for="f-message" class="block text-sm font-medium text-gray-700 mb-1">{t('contact.form.message')}</label>
+            <textarea id="f-message" name="message" rows={5}
               class="w-full border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition-colors resize-none"></textarea>
           </div>
 
-          <div class="flex flex-col sm:flex-row gap-4 pt-2">
-            <button type="button" id="btn-email"
-              class="flex-1 bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-3 rounded text-sm transition-colors">
+          <!-- Honeypot: hidden from humans, tempting to bots -->
+          <div class="absolute left-[-9999px]" aria-hidden="true">
+            <label for="f-website">Website</label>
+            <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <!-- Consent -->
+          <div class="flex items-start gap-2">
+            <input id="f-consent" type="checkbox" class="mt-1 accent-[#00B4D8]" />
+            <label for="f-consent" class="text-sm text-gray-600">
+              {t('form.consent.label')}
+              <a href={`/${lang}/privacy`} class="text-accent underline hover:text-primary">{t('consent.privacy')}</a>
+            </label>
+          </div>
+
+          <div id="form-status" hidden></div>
+
+          <!-- Primary action: send lead to HubSpot -->
+          <button type="button" id="btn-submit" data-track="cta" data-track-location="contact-form"
+            class="w-full bg-accent hover:bg-accent-dark text-primary font-bold px-6 py-3 rounded text-sm transition-colors">
+            {t('form.submit')}
+          </button>
+
+          <!--
+            Alternate channels. These open mailto:/wa.me through window.open
+            rather than being links, so the delegated classifier in
+            scripts/tracking.ts cannot infer them from an href — they carry an
+            explicit data-track instead.
+          -->
+          <div class="flex flex-col sm:flex-row gap-4 pt-2 border-t border-gray-100">
+            <button type="button" id="btn-email" data-track="email" data-track-location="contact-form"
+              class="flex-1 border border-primary text-primary hover:bg-primary hover:text-white font-semibold px-6 py-3 rounded text-sm transition-colors">
               {t('contact.form.send.email')}
             </button>
-            <button type="button" id="btn-whatsapp"
+            <button type="button" id="btn-whatsapp" data-track="whatsapp" data-track-location="contact-form"
               class="flex-1 bg-[#25D366] hover:bg-[#1fba5a] text-white font-semibold px-6 py-3 rounded text-sm transition-colors">
               {t('contact.form.send.whatsapp')}
             </button>
@@ -113,6 +165,16 @@ const serviceOptions = lang === 'es'
   </section>
 
 </BaseLayout>
+
+<script type="application/json" id="lead-messages" set:html={JSON.stringify(leadMessages)}></script>
+
+<script>
+  import { initLeadForm } from '../../scripts/leadForm'
+  const el = document.getElementById('lead-messages')
+  const messages = el && el.textContent ? JSON.parse(el.textContent) : {}
+  // No landing_id: this is the site's own contact form, not a campaign landing.
+  initLeadForm(messages, { form_name: 'contact' })
+</script>
 
 <script is:inline define:vars={{ WHATSAPP_NUMBER, EMAIL }}>
   function getFormData() {
